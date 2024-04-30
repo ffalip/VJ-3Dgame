@@ -11,8 +11,9 @@ public class PlayerMove : MonoBehaviour
     private bool isJumping = false;
     private bool isRolling = false;
     private bool turnL = false;
-    private Vector3 obj;
-    private Vector3 pos;
+    private bool turnR = false;
+    private float obj;
+    private float pos;
     private float timeJ = 0f;
     private float timeR = 0f;
     // Update is called once per frame
@@ -20,17 +21,18 @@ public class PlayerMove : MonoBehaviour
     {
         transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed, Space.World);
 
-        if(Input.GetKeyDown("right"))
+        if(Input.GetKeyDown("right") && !turnR)
         {
-            transform.position = transform.position + new Vector3(0.9f, 0.0f, 0.0f);
-            //transform.Translate(Vector3.right * Time.deltaTime * moveSpeed, Space.World);
+            turnR = true;
+            pos = transform.position.x;
+            obj = pos + 0.9f;
         }
 
         else if (Input.GetKeyDown("left") && !turnL)
         {
             turnL = true;
-            pos = transform.position;
-            obj = transform.position + new Vector3(-0.9f, 0.0f, 0.0f);
+            pos = transform.position.x;
+            obj = pos - 0.9f;
         }
 
         else if (Input.GetKeyDown("up") && !isJumping && !isRolling)
@@ -49,7 +51,7 @@ public class PlayerMove : MonoBehaviour
             collisionRoll.enabled = false;
         }
 
-        if(Time.time - timeJ >= 0.933 && isJumping)
+        if(Time.time - timeJ >= 0.5 && isJumping)
         {
             isJumping = false;
             Debug.Log("desactivar isJumping");
@@ -66,12 +68,17 @@ public class PlayerMove : MonoBehaviour
 
     }
     private void FixedUpdate() {
-        if (turnL && pos.x > obj.x) {
-            pos = transform.position;
-            transform.position = transform.position + new Vector3(-0.09f, 0.0f, 0.0f);
-        } else if(turnL){
+        if (turnL && pos <= obj + 0.1f) {
             turnL = false;
-            //transform.position = new;
+        } else if(turnL){
+            pos = transform.position.x;
+            transform.position = transform.position + new Vector3(-0.1f, 0.0f, 0.0f);
+        }
+        if (turnR && pos >= obj - 0.1f) {
+            turnR = false;
+        } else if(turnR){
+            pos = transform.position.x;
+            transform.position = transform.position + new Vector3(0.1f, 0.0f, 0.0f);
         }
     }
 }
