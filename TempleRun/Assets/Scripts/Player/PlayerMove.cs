@@ -10,7 +10,9 @@ public class PlayerMove : MonoBehaviour
     public BoxCollider collisionRoll;
     private bool isJumping = false;
     private bool isRolling = false;
-
+    private bool turnL = false;
+    private Vector3 obj;
+    private Vector3 pos;
     private float timeJ = 0f;
     private float timeR = 0f;
     // Update is called once per frame
@@ -24,9 +26,11 @@ public class PlayerMove : MonoBehaviour
             //transform.Translate(Vector3.right * Time.deltaTime * moveSpeed, Space.World);
         }
 
-        else if (Input.GetKeyDown("left"))
+        else if (Input.GetKeyDown("left") && !turnL)
         {
-            transform.position = transform.position + new Vector3(-0.9f, 0.0f, 0.0f);
+            turnL = true;
+            pos = transform.position;
+            obj = transform.position + new Vector3(-0.9f, 0.0f, 0.0f);
         }
 
         else if (Input.GetKeyDown("up") && !isJumping && !isRolling)
@@ -58,6 +62,16 @@ public class PlayerMove : MonoBehaviour
             Debug.Log("desactivar isRolling");
             timeR = 0f;
             collisionRoll.enabled = true;
+        }
+
+    }
+    private void FixedUpdate() {
+        if (turnL && pos.x > obj.x) {
+            pos = transform.position;
+            transform.position = transform.position + new Vector3(-0.09f, 0.0f, 0.0f);
+        } else if(turnL){
+            turnL = false;
+            //transform.position = new;
         }
     }
 }
