@@ -12,8 +12,9 @@ public class GenerateLevel : MonoBehaviour
     public bool creatingSection = false;
     public int secNum;
 
-    [SerializeField] private int minimumStraightSections = 3;
+    [SerializeField] private int minimumStraightSections = 5;
     [SerializeField] private int maximumStraightSections = 15;
+    [SerializeField] private int currentStraight = 0;
 
     private Vector3 currentTileDirection = Vector3.forward;
     private Vector3 currentTilePosition = Vector3.zero;
@@ -59,7 +60,7 @@ public class GenerateLevel : MonoBehaviour
             }
             else if (currentTileDirection == Vector3.left)
             {
-                currentTileDirection = Vector3.back;
+                currentTileDirection = Vector3.forward;
             }
             else if (currentTileDirection == Vector3.back)
             {
@@ -67,17 +68,91 @@ public class GenerateLevel : MonoBehaviour
             }
             else
             {
-                currentTileDirection = Vector3.forward;
+                currentTileDirection = Vector3.back;
             }
         }
     }
 
     IEnumerator GenerateSection()
     {
-        secNum = UnityEngine.Random.Range(0, 3);
-        Quaternion q = Quaternion.Euler(0, 90, 0);
-        Instantiate(section[secNum], currentTilePosition + currentTileDirection*2.7f, q * Quaternion.Euler(currentTileDirection));
+        if (currentStraight < 5)
+        {
+            secNum = UnityEngine.Random.Range(0, 3);
+        }
+        else if (currentStraight >= 7)
+        {
+            currentStraight = 0;
+            secNum = UnityEngine.Random.Range(3, 5);
+        }
+        ++currentStraight;
+
+        Quaternion q;
+        if (currentTileDirection == Vector3.forward)
+        {
+            q = Quaternion.Euler(0, 90, 0);
+            if (secNum == 3) q = Quaternion.Euler(0, 0, 0);
+        }
+        else if (currentTileDirection == Vector3.right)
+        {
+            q = Quaternion.Euler(0, 180, 0);
+            if (secNum == 3) q = Quaternion.Euler(0, 90, 0);
+        }
+        else if (currentTileDirection == Vector3.left)
+        {
+            q = Quaternion.Euler(0, 0, 0);
+            if (secNum == 3) q = Quaternion.Euler(0, 270, 0);
+        }
+        else
+        {
+            q = Quaternion.Euler(0, 270, 0);
+            if (secNum == 3) q = Quaternion.Euler(0, 180, 0);
+        }
+
+        
+        Instantiate(section[secNum], currentTilePosition + currentTileDirection * 2.7f, q);
         currentTilePosition += currentTileDirection * 2.7f;
+
+        if (secNum == 3)
+        {
+            if (currentTileDirection == Vector3.forward)
+            {
+                currentTileDirection = Vector3.right;
+            }
+            else if (currentTileDirection == Vector3.left)
+            {
+                currentTileDirection = Vector3.forward;
+            }
+            else if (currentTileDirection == Vector3.back)
+            {
+                currentTileDirection = Vector3.left;
+            }
+            else
+            {
+                currentTileDirection = Vector3.back;
+            }
+        }
+
+        if (secNum == 4)
+        {
+            if (currentTileDirection == Vector3.forward)
+            {
+                currentTileDirection = Vector3.left;
+            }
+            else if (currentTileDirection == Vector3.left)
+            {
+                currentTileDirection = Vector3.back;
+            }
+            else if (currentTileDirection == Vector3.back)
+            {
+                currentTileDirection = Vector3.right;
+            }
+            else
+            {
+                currentTileDirection = Vector3.forward;
+            }
+        }
+
+        
         yield return new WaitForSeconds(0.8f);
         creatingSection = false;
     }
