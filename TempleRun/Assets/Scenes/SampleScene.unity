@@ -331,11 +331,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!1 &402014131 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 126642, guid: 8db2483c1dee44c2d979e3f39c553bc0, type: 3}
-  m_PrefabInstance: {fileID: 337949957}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &572909685 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8524074713595820031, guid: 0c5ac78abcfeaa84595ca73104428586, type: 3}
@@ -501,8 +496,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   section:
   - {fileID: 572909685}
-  - {fileID: 1948197691}
-  - {fileID: 402014131}
+  - {fileID: 572909685}
+  - {fileID: 572909685}
   - {fileID: 8714283907536618868, guid: 17b857ecabd745c47803e18355e2cb65, type: 3}
   - {fileID: 7539810585147077900, guid: 5cc1ef8e1b662eb4abeb2e7e665cf3d8, type: 3}
   offset: 2.7
@@ -1222,11 +1217,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 268f8d0005216488687b2c958b3ef2da, type: 3}
---- !u!1 &1948197691 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 105518, guid: 268f8d0005216488687b2c958b3ef2da, type: 3}
-  m_PrefabInstance: {fileID: 1908119172}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2962521346977098226
 PrefabInstance:
   m_ObjectHideFlags: 0

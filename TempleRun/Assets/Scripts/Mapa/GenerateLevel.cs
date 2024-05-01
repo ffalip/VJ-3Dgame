@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GenerateLevel : MonoBehaviour
 {
 
-    public GameObject[] section;
+    public List<GameObject> section;
+    public List<GameObject> generatedSections;
 
     public float offset = 2.7f;
     public bool creatingSection = false;
@@ -32,6 +34,12 @@ public class GenerateLevel : MonoBehaviour
         {
             creatingSection = true;
             StartCoroutine(GenerateSection());
+            if (generatedSections.Count >= 10)
+            {
+                
+                Destroy(generatedSections[0]);
+                generatedSections.Remove(generatedSections[0]);
+            }
         }
         if (Input.GetKeyDown("a"))
         {
@@ -109,7 +117,7 @@ public class GenerateLevel : MonoBehaviour
         }
 
         
-        Instantiate(section[secNum], currentTilePosition + currentTileDirection * 2.7f, q);
+        generatedSections.Add(GameObject.Instantiate(section[secNum], currentTilePosition + currentTileDirection * 2.7f, q));
         currentTilePosition += currentTileDirection * 2.7f;
 
         if (secNum == 3)
