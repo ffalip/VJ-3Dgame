@@ -21,14 +21,14 @@ public class PlayerMove : MonoBehaviour
     {
         transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed, Space.World);
 
-        if(Input.GetKeyDown("right") && !turnR)
+        if(Input.GetKeyDown("right") && !turnR && !turnL)
         {
             turnR = true;
             pos = transform.position.x;
             obj = pos + 0.9f;
         }
 
-        else if (Input.GetKeyDown("left") && !turnL)
+        else if (Input.GetKeyDown("left") && !turnL && !turnR)
         {
             turnL = true;
             pos = transform.position.x;
