@@ -8,6 +8,7 @@ public class PlayerMove : MonoBehaviour
     public Animator anim;
     public BoxCollider collisionJump;
     public BoxCollider collisionRoll;
+    private Vector3 moveDirection = Vector3.forward;
     private bool isJumping = false;
     private bool isRolling = false;
     private bool turnL = false;
@@ -19,7 +20,7 @@ public class PlayerMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed, Space.World);
+        transform.Translate(moveDirection * Time.deltaTime * moveSpeed, Space.World);
 
         if(Input.GetKeyDown("right") && !turnR && !turnL)
         {
@@ -79,6 +80,50 @@ public class PlayerMove : MonoBehaviour
         } else if(turnR){
             pos = transform.position.x;
             transform.position = transform.position + new Vector3(0.1f, 0.0f, 0.0f);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "HitBoxLeft")
+        {
+            Debug.Log("LEft");
+            if (moveDirection == Vector3.forward)
+            {
+                moveDirection = Vector3.right;
+            }
+            else if (moveDirection == Vector3.left)
+            {
+                moveDirection = Vector3.forward;
+            }
+            else if (moveDirection == Vector3.back)
+            {
+                moveDirection = Vector3.left;
+            }
+            else
+            {
+                moveDirection = Vector3.back;
+            }
+        }
+        if (other.tag == "HitBoxRight")
+        {
+            Debug.Log("Right");
+            if (moveDirection == Vector3.forward)
+            {
+                moveDirection = Vector3.left;
+            }
+            else if (moveDirection == Vector3.left)
+            {
+                moveDirection = Vector3.back;
+            }
+            else if (moveDirection == Vector3.back)
+            {
+                moveDirection = Vector3.right;
+            }
+            else
+            {
+                moveDirection = Vector3.forward;
+            }
         }
     }
 }
