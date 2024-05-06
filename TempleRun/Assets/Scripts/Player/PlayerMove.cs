@@ -13,6 +13,8 @@ public class PlayerMove : MonoBehaviour
     private bool isRolling = false;
     private bool turnL = false;
     private bool turnR = false;
+    private bool collisionTurnR = false;
+    private bool collisionTurnL = false;
     private float obj;
     private float pos;
     private float timeJ = 0f;
@@ -20,22 +22,18 @@ public class PlayerMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(moveDirection * Time.deltaTime * moveSpeed, Space.World);
-
         if(Input.GetKeyDown("right") && !turnR)
         {
             turnR = true;
             pos = transform.position.x;
             obj = pos + 0.9f;
         }
-
         else if (Input.GetKeyDown("left") && !turnL)
         {
             turnL = true;
             pos = transform.position.x;
             obj = pos - 0.9f;
         }
-
         else if (Input.GetKeyDown("up") && !isJumping && !isRolling)
         {
             anim.SetTrigger("Jump");
@@ -43,7 +41,6 @@ public class PlayerMove : MonoBehaviour
             timeJ = Time.time;
             collisionJump.enabled = false;
         }
-
         else if (Input.GetKeyDown("down") && !isJumping && !isRolling)
         {
             anim.SetTrigger("Roll");
@@ -59,6 +56,7 @@ public class PlayerMove : MonoBehaviour
             timeJ = 0f;
             collisionJump.enabled = true;
         }
+
         if (Time.time - timeR >= 1.167 && isRolling)
         {
             isRolling = false;
@@ -67,8 +65,51 @@ public class PlayerMove : MonoBehaviour
             collisionRoll.enabled = true;
         }
 
+
+        if (collisionTurnL && Input.GetKeyDown("left"))
+        {
+            collisionTurnL = false;
+            if (moveDirection == Vector3.forward)
+            {
+                moveDirection = Vector3.right;
+            }
+            else if (moveDirection == Vector3.left)
+            {
+                moveDirection = Vector3.forward;
+            }
+            else if (moveDirection == Vector3.back)
+            {
+                moveDirection = Vector3.left;
+            }
+            else
+            {
+                moveDirection = Vector3.back;
+            }
+        }
+
+        if (collisionTurnR && Input.GetKeyDown("right"))
+        {
+            collisionTurnR = false;
+            if (moveDirection == Vector3.forward)
+            {
+                moveDirection = Vector3.left;
+            }
+            else if (moveDirection == Vector3.left)
+            {
+                moveDirection = Vector3.back;
+            }
+            else if (moveDirection == Vector3.back)
+            {
+                moveDirection = Vector3.right;
+            }
+            else
+            {
+                moveDirection = Vector3.forward;
+            }
+        }
     }
     private void FixedUpdate() {
+        transform.Translate(moveDirection * Time.deltaTime * moveSpeed, Space.World);
         if (turnL && pos <= obj + 0.1f) {
             turnL = false;
         } else if(turnL){
@@ -87,43 +128,13 @@ public class PlayerMove : MonoBehaviour
     {
         if (other.tag == "HitBoxLeft")
         {
+            collisionTurnL = true;
             Debug.Log("LEft");
-            if (moveDirection == Vector3.forward)
-            {
-                moveDirection = Vector3.right;
-            }
-            else if (moveDirection == Vector3.left)
-            {
-                moveDirection = Vector3.forward;
-            }
-            else if (moveDirection == Vector3.back)
-            {
-                moveDirection = Vector3.left;
-            }
-            else
-            {
-                moveDirection = Vector3.back;
-            }
         }
         if (other.tag == "HitBoxRight")
         {
+            collisionTurnR = true;
             Debug.Log("Right");
-            if (moveDirection == Vector3.forward)
-            {
-                moveDirection = Vector3.left;
-            }
-            else if (moveDirection == Vector3.left)
-            {
-                moveDirection = Vector3.back;
-            }
-            else if (moveDirection == Vector3.back)
-            {
-                moveDirection = Vector3.right;
-            }
-            else
-            {
-                moveDirection = Vector3.forward;
-            }
         }
     }
 }
