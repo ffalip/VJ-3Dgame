@@ -19,17 +19,18 @@ public class PlayerMove : MonoBehaviour
     private float pos;
     private float timeJ = 0f;
     private float timeR = 0f;
+    public GameObject camera;
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown("right") && !turnR && !turnL)
+        if(Input.GetKeyDown("right") && !turnR && !turnL && !collisionTurnR && !collisionTurnL)
         {
             turnR = true;
             pos = transform.position.x;
             obj = pos + 0.9f;
         }
 
-        else if (Input.GetKeyDown("left") && !turnL && !turnR)
+        else if (Input.GetKeyDown("left") && !turnL && !turnR && !collisionTurnR && !collisionTurnL)
         {
             turnL = true;
             pos = transform.position.x;
@@ -70,43 +71,51 @@ public class PlayerMove : MonoBehaviour
         if (collisionTurnL && Input.GetKeyDown("left"))
         {
             collisionTurnL = false;
+            transform.Rotate(0.0f, -90.0f, 0.0f, Space.Self);
+            
+            
             if (moveDirection == Vector3.forward)
-            {
-                moveDirection = Vector3.right;
-            }
-            else if (moveDirection == Vector3.left)
-            {
-                moveDirection = Vector3.forward;
-            }
-            else if (moveDirection == Vector3.back)
             {
                 moveDirection = Vector3.left;
             }
-            else
+            else if (moveDirection == Vector3.left)
             {
                 moveDirection = Vector3.back;
             }
+            else if (moveDirection == Vector3.back)
+            {
+                moveDirection = Vector3.right;
+            }
+            else
+            {
+                moveDirection = Vector3.forward;
+            }
+            camera.GetComponent<CameraFollowPlayer>().modifyOffset(moveDirection);
         }
 
         if (collisionTurnR && Input.GetKeyDown("right"))
         {
             collisionTurnR = false;
+            transform.Rotate(0.0f, 90.0f, 0.0f, Space.Self);
+           
+            
             if (moveDirection == Vector3.forward)
-            {
-                moveDirection = Vector3.left;
-            }
-            else if (moveDirection == Vector3.left)
-            {
-                moveDirection = Vector3.back;
-            }
-            else if (moveDirection == Vector3.back)
             {
                 moveDirection = Vector3.right;
             }
-            else
+            else if (moveDirection == Vector3.left)
             {
                 moveDirection = Vector3.forward;
             }
+            else if (moveDirection == Vector3.back)
+            {
+                moveDirection = Vector3.left;
+            }
+            else
+            {
+                moveDirection = Vector3.back;
+            }
+            camera.GetComponent<CameraFollowPlayer>().modifyOffset(moveDirection);
         }
     }
     private void FixedUpdate() {
@@ -136,6 +145,19 @@ public class PlayerMove : MonoBehaviour
         {
             collisionTurnR = true;
             Debug.Log("Right");
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "HitBoxLeft")
+        {
+            collisionTurnL = false;
+            Debug.Log("LEftExit");
+        }
+        if (other.tag == "HitBoxRight")
+        {
+            collisionTurnR = false;
+            Debug.Log("RightExit");
         }
     }
 }
