@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class CameraFollowPlayer : MonoBehaviour
 {
-    private Vector3 offset;
-    Quaternion direction;
+    public Vector3 offset;
+    public Quaternion direction;
     public Transform target;
     public float smoothTime1;
     public float smoothTime2;
@@ -29,23 +29,23 @@ public class CameraFollowPlayer : MonoBehaviour
 
         if (dir == Vector3.forward)
         {
-            offset = new Vector3(0.0f, 2.0f, -3.0f);
-            direction = Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f));
+            offset = new Vector3(0.0f, 1.85f, -1.85f);
+            direction = Quaternion.Euler(new Vector3(20.0f, 0.0f, 0.0f));
         }
         else if (dir == Vector3.right)
         {
-            offset = new Vector3(-3.0f, 2.0f, 0.0f);
-            direction = Quaternion.Euler(new Vector3(0.0f, 90.0f, 0.0f));
+            offset = new Vector3(-1.85f, 1.85f, 0.0f);
+            direction = Quaternion.Euler(new Vector3(20.0f, 90.0f, 0.0f));
         }
         else if (dir == Vector3.left)
         {
-            offset = new Vector3(3.0f, 2.0f, 0.0f);
-            direction = Quaternion.Euler(new Vector3(0.0f, -90.0f, 0.0f));
+            offset = new Vector3(1.85f, 1.85f, 0.0f);
+            direction = Quaternion.Euler(new Vector3(20.0f, -90.0f, 0.0f));
         }
         else
         {
-            offset = new Vector3(0.0f, 2.0f, 3.0f);
-            direction = Quaternion.Euler(new Vector3(0.0f, 180.0f, 0.0f));
+            offset = new Vector3(0.0f, 1.85f, 1.85f);
+            direction = Quaternion.Euler(new Vector3(20.0f, 180.0f, 0.0f));
         }
         
     }

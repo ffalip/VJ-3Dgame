@@ -117,6 +117,11 @@ public class PlayerMove : MonoBehaviour
             }
             camera.GetComponent<CameraFollowPlayer>().modifyOffset(moveDirection);
         }
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            Time.timeScale = 0;
+        }
     }
     private void FixedUpdate() {
         transform.Translate(moveDirection * Time.deltaTime * moveSpeed, Space.World);
