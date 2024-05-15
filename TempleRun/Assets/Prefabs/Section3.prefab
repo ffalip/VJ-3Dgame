@@ -7094,7 +7094,7 @@ GameObject:
   - component: {fileID: 6422643616235313708}
   m_Layer: 0
   m_Name: fbBrickVase
-  m_TagString: Untagged
+  m_TagString: Paret
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

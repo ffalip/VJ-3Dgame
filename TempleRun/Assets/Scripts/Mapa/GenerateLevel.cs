@@ -20,6 +20,7 @@ public class GenerateLevel : MonoBehaviour
 
     private Vector3 currentTileDirection = Vector3.forward;
     private Vector3 currentTilePosition = Vector3.zero;
+    private bool playerIsDead= false;
     private GameObject prevSection;
 
     private void Start()
@@ -30,7 +31,7 @@ public class GenerateLevel : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (creatingSection == false)
+        if (creatingSection == false  && !playerIsDead)
         {
             creatingSection = true;
             StartCoroutine(GenerateSection());
@@ -160,7 +161,7 @@ public class GenerateLevel : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(0.7f);
+        yield return new WaitForSeconds(1f);
         creatingSection = false;
     }
 
@@ -242,5 +243,10 @@ public class GenerateLevel : MonoBehaviour
                 currentTileDirection = Vector3.forward;
             }
         }
+    }
+    
+    public void setPlayerIsDead()
+    {
+        playerIsDead = true;
     }
 }

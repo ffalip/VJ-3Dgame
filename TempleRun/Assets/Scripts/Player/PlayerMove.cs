@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerMove : MonoBehaviour
 {
-    public float moveSpeed = 3;
+    public float moveSpeed = 2.7f;
     public float turnSpeed = 0.1f;
     private float centralAxis = 0;
     public Animator anim;
@@ -22,9 +25,17 @@ public class PlayerMove : MonoBehaviour
     private float timeJ = 0f;
     private float timeR = 0f;
     public GameObject camera;
-    // Update is called once per frame
+    private bool isDead = false;
     public Vector3 startMarker;
     public Vector3 endMarker;
+    public GameObject LevelControl;
+
+    public TextMeshProUGUI deadText;
+    private void Awake()
+    {
+        deadText.enabled = false;
+    }
+    // Update is called once per frame
     void Update()
     {
         //----------------LEFT-RIGHT-MOVEMENT----------------
@@ -147,6 +158,10 @@ public class PlayerMove : MonoBehaviour
         {
             Time.timeScale = 0;
         }
+        if (isDead && Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadScene("Credits");
+        }
     }
     private void FixedUpdate() {
         //transform.Translate(moveDirection * Time.deltaTime * moveSpeed, Space.World);
@@ -179,6 +194,10 @@ public class PlayerMove : MonoBehaviour
             collisionTurnR = true;
             Debug.Log("Right");
         }
+        if (other.tag == "Paret")
+        {
+            die();
+        }
     }
     private void OnTriggerExit(Collider other)
     {
@@ -192,5 +211,14 @@ public class PlayerMove : MonoBehaviour
             collisionTurnR = false;
             Debug.Log("RightExit");
         }
+    }
+
+    private void die()
+    {
+        isDead = true;
+        moveSpeed = 0.0f;
+        anim.SetTrigger("Crash");
+        deadText.enabled = true;
+        LevelControl.GetComponent<GenerateLevel>().setPlayerIsDead();
     }
 }
