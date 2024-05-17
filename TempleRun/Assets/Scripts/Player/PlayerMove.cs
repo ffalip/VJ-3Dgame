@@ -8,8 +8,6 @@ using UnityEngine.UI;
 public class PlayerMove : MonoBehaviour
 {
     public float moveSpeed = 2.7f;
-    public float turnSpeed = 0.1f;
-    private float centralAxis = 0;
     public Animator anim;
     public BoxCollider collisionJump;
     public BoxCollider collisionRoll;
@@ -20,14 +18,13 @@ public class PlayerMove : MonoBehaviour
     private bool turnR = false;
     private bool collisionTurnR = false;
     private bool collisionTurnL = false;
-    private float obj;
+    private int lane = 1;
     private float pos;
     private float timeJ = 0f;
     private float timeR = 0f;
+    private Vector3 turnPos;
     public GameObject camera;
     private bool isDead = false;
-    public Vector3 startMarker;
-    public Vector3 endMarker;
     public GameObject LevelControl;
 
     public TextMeshProUGUI deadText;
@@ -39,40 +36,27 @@ public class PlayerMove : MonoBehaviour
     void Update()
     {
         //----------------LEFT-RIGHT-MOVEMENT----------------
-        if(Input.GetKeyDown("right") && !turnR && !turnL && !collisionTurnR && !collisionTurnL)
+        if (Input.GetKeyDown("right") && !turnR && !turnL && !collisionTurnR && !collisionTurnL &&!isDead)
         {
-            if (moveDirection == Vector3.forward || moveDirection == Vector3.back){
-                if (transform.position.x < centralAxis + 0.9f)
-                    turnR = true;
-                    pos = transform.position.x;
-            } else {
-                if (transform.position.z != centralAxis + 0.9f)
-                    turnR = true;
-                    pos = transform.position.z;
-            }
+            turnR = true;
+            pos = 0;
         }
-        else if (Input.GetKeyDown("left") && !turnL && !turnR && !collisionTurnR && !collisionTurnL)
+
+        if (Input.GetKeyDown("left") && !turnL && !turnR && !collisionTurnR && !collisionTurnL &&!isDead)
         {
-            if (moveDirection == Vector3.forward || moveDirection == Vector3.back){
-                if (transform.position.x > centralAxis - 0.9f) {
-                    turnL = true;
-                    pos = transform.position.x;
-                }
-            } else {
-                if (transform.position.z > centralAxis - 0.9f)
-                    turnL = true;
-                    pos = transform.position.z;
-            }
+            turnL = true;
+            pos = 0;
         }
+
         //----------------JUMP-ROLL----------------
-        else if (Input.GetKeyDown("up") && !isJumping && !isRolling)
+        if (Input.GetKeyDown("up") && !isJumping && !isRolling && !isDead)
         {
             anim.SetTrigger("Jump");
             isJumping = true;
             timeJ = Time.time;
             collisionJump.enabled = false;
         }
-        else if (Input.GetKeyDown("down") && !isJumping && !isRolling)
+        if (Input.GetKeyDown("down") && !isJumping && !isRolling && !isDead)
         {
             anim.SetTrigger("Roll");
             isRolling = true;
@@ -80,10 +64,9 @@ public class PlayerMove : MonoBehaviour
             collisionRoll.enabled = false;
         }
 
-        if(Time.time - timeJ >= 0.5 && isJumping)
+        if (Time.time - timeJ >= 0.5 && isJumping)
         {
             isJumping = false;
-            Debug.Log("desactivar isJumping");
             timeJ = 0f;
             collisionJump.enabled = true;
         }
@@ -91,66 +74,53 @@ public class PlayerMove : MonoBehaviour
         if (Time.time - timeR >= 1.167 && isRolling)
         {
             isRolling = false;
-            Debug.Log("desactivar isRolling");
             timeR = 0f;
             collisionRoll.enabled = true;
         }
 
-
-        if (collisionTurnL && Input.GetKeyDown("left"))
+        //----------------TURN-LEFT---------------
+        if (collisionTurnL && Input.GetKeyDown("left") && !isDead)
         {
             collisionTurnL = false;
             transform.Rotate(0.0f, -90.0f, 0.0f, Space.Self);
-            
-            
-            if (moveDirection == Vector3.forward)
+
+            float dirX = 1;
+            float dirZ = 0;
+            if (moveDirection == Vector3.back || moveDirection == Vector3.forward)
             {
-                centralAxis = transform.position.x;
-                moveDirection = Vector3.left;
+                dirX = 0;
+                dirZ = 1;
             }
-            else if (moveDirection == Vector3.left)
-            {
-                centralAxis = transform.position.z;
-                moveDirection = Vector3.back;
-            }
-            else if (moveDirection == Vector3.back)
-            {
-                centralAxis = transform.position.x;
-                moveDirection = Vector3.right;
-            }
-            else
-            {
-                centralAxis = transform.position.z;
-                moveDirection = Vector3.forward;
-            }
+
+            if (moveDirection == Vector3.forward) moveDirection = Vector3.left;
+            else if (moveDirection == Vector3.left) moveDirection = Vector3.back;
+            else if (moveDirection == Vector3.back) moveDirection = Vector3.right;
+            else moveDirection = Vector3.forward;
+
+            transform.position = transform.position + new Vector3(-(transform.position.x % 0.9f) + 0.9f * dirX, 0f, -(transform.position.z % 0.9f) + 0.9f * dirZ);
             camera.GetComponent<CameraFollowPlayer>().modifyOffset(moveDirection);
         }
-
-        if (collisionTurnR && Input.GetKeyDown("right"))
+        //----------------TURN-RIGHT---------------
+        if (collisionTurnR && Input.GetKeyDown("right") && !isDead)
         {
             collisionTurnR = false;
             transform.Rotate(0.0f, 90.0f, 0.0f, Space.Self);
-           
-            if (moveDirection == Vector3.forward)
+
+            float dirX = 1;
+            float dirZ = 0;
+            if (moveDirection == Vector3.back || moveDirection == Vector3.forward)
             {
-                centralAxis = transform.position.x;
-                moveDirection = Vector3.right;
+                dirX = 0;
+                dirZ = 1;
             }
-            else if (moveDirection == Vector3.left)
-            {
-                centralAxis = transform.position.z;
-                moveDirection = Vector3.forward;
-            }
-            else if (moveDirection == Vector3.back)
-            {
-                centralAxis = transform.position.x;
-                moveDirection = Vector3.left;
-            }
-            else
-            {
-                centralAxis = transform.position.z;
-                moveDirection = Vector3.back;
-            }
+
+            if (moveDirection == Vector3.forward) moveDirection = Vector3.right;
+            else if (moveDirection == Vector3.left) moveDirection = Vector3.forward;
+            else if (moveDirection == Vector3.back) moveDirection = Vector3.left;
+            else moveDirection = Vector3.back;
+
+            transform.position = transform.position + new Vector3(-(transform.position.x % 0.9f) + 0.9f * dirX, 0f, -(transform.position.z % 0.9f) + 0.9f * (dirZ));
+
             camera.GetComponent<CameraFollowPlayer>().modifyOffset(moveDirection);
         }
 
@@ -163,41 +133,34 @@ public class PlayerMove : MonoBehaviour
             SceneManager.LoadScene("Credits");
         }
     }
-    private void FixedUpdate() {
-        //transform.Translate(moveDirection * Time.deltaTime * moveSpeed, Space.World);
-        if (turnL && transform.position.x <= pos - 0.9f) {
-            turnL = false;
-            transform.position = new Vector3(pos - 0.9f, transform.position.y, transform.position.z); 
-        } else if(turnL){
-            Vector3 turnDirection = new Vector3(1.0f, 0.0f ,1.0f) - new Vector3(Mathf.Abs(moveDirection.x), 0, Mathf.Abs(moveDirection.z));
-            transform.position = transform.position + turnDirection * turnSpeed * (-1); 
+    private void FixedUpdate()
+    {
+        if (turnR && pos <= 9)
+        {
+            transform.Translate(Vector3.Lerp(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.9f, 0.0f, 0.0f), 0.1f), Space.Self);
+            ++pos;
         }
-        if (turnR && transform.position.x >= pos + 0.9f) {
-            turnR = false;
-            transform.position = new Vector3(pos + 0.9f, transform.position.y, transform.position.z); 
-        } else if(turnR) {
-            Vector3 turnDirection = new Vector3(1.0f, 0.0f ,1.0f) - new Vector3(Mathf.Abs(moveDirection.x), 0, Mathf.Abs(moveDirection.z));
-            transform.position = transform.position + turnDirection * turnSpeed; 
+        else turnR = false;
+
+        if (turnL && pos <= 9)
+        {
+            transform.Translate(Vector3.Lerp(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(-0.9f, 0.0f, 0.0f), 0.1f), Space.Self);
+            ++pos;
         }
-        transform.Translate(moveDirection * Time.deltaTime * moveSpeed, Space.World);
+        else turnL = false;
+
+        transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed, Space.Self);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "HitBoxLeft")
-        {
-            collisionTurnL = true;
-            Debug.Log("LEft");
-        }
-        if (other.tag == "HitBoxRight")
-        {
-            collisionTurnR = true;
-            Debug.Log("Right");
-        }
-        if (other.tag == "Paret")
-        {
-            die();
-        }
+        if (other.tag == "HitBoxLeft") collisionTurnL = true;
+
+        if (other.tag == "HitBoxRight") collisionTurnR = true;
+
+        if (other.tag == "Paret") die();
+
+        turnPos = transform.position;
     }
     private void OnTriggerExit(Collider other)
     {
