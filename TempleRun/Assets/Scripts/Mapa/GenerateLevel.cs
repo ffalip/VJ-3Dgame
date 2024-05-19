@@ -23,6 +23,8 @@ public class GenerateLevel : MonoBehaviour
     private bool playerIsDead= false;
     private GameObject prevSection;
 
+    public int sectionNum;
+    public int turnSectionNum;
     private void Start()
     {
         for (int i = 0; i < 15; ++i) GenerateIni();
@@ -86,12 +88,12 @@ public class GenerateLevel : MonoBehaviour
     {
         if (currentStraight < 5)
         {
-            secNum = UnityEngine.Random.Range(0, 3);
+            secNum = UnityEngine.Random.Range(0, sectionNum);
         }
         else if (currentStraight >= 7)
         {
-            currentStraight = 0;
-            secNum = UnityEngine.Random.Range(3, 5);
+            currentStraight = 0;    
+            secNum = UnityEngine.Random.Range(sectionNum, turnSectionNum);
         }
         ++currentStraight;
 
@@ -99,29 +101,29 @@ public class GenerateLevel : MonoBehaviour
         if (currentTileDirection == Vector3.forward)
         {
             q = Quaternion.Euler(0, 90, 0);
-            if (secNum == 3) q = Quaternion.Euler(0, 0, 0);
+            if (secNum == 4) q = Quaternion.Euler(0, 0, 0);
         }
         else if (currentTileDirection == Vector3.right)
         {
             q = Quaternion.Euler(0, 180, 0);
-            if (secNum == 3) q = Quaternion.Euler(0, 90, 0);
+            if (secNum == 4) q = Quaternion.Euler(0, 90, 0);
         }
         else if (currentTileDirection == Vector3.left)
         {
             q = Quaternion.Euler(0, 0, 0);
-            if (secNum == 3) q = Quaternion.Euler(0, 270, 0);
+            if (secNum == 4) q = Quaternion.Euler(0, 270, 0);
         }
         else
         {
             q = Quaternion.Euler(0, 270, 0);
-            if (secNum == 3) q = Quaternion.Euler(0, 180, 0);
+            if (secNum == 4) q = Quaternion.Euler(0, 180, 0);
         }
 
         
         generatedSections.Add(GameObject.Instantiate(section[secNum], currentTilePosition + currentTileDirection * 2.7f, q));
         currentTilePosition += currentTileDirection * 2.7f;
 
-        if (secNum == 3)
+        if (secNum == 4)
         {
             if (currentTileDirection == Vector3.forward)
             {
@@ -141,7 +143,7 @@ public class GenerateLevel : MonoBehaviour
             }
         }
 
-        if (secNum == 4)
+        if (secNum == 5)
         {
             if (currentTileDirection == Vector3.forward)
             {
@@ -169,12 +171,12 @@ public class GenerateLevel : MonoBehaviour
     {
         if (currentStraight < 5)
         {
-            secNum = UnityEngine.Random.Range(0, 3);
+            secNum = UnityEngine.Random.Range(0, sectionNum);
         }
         else if (currentStraight >= 7)
         {
             currentStraight = 0;
-            secNum = UnityEngine.Random.Range(3, 5);
+            secNum = UnityEngine.Random.Range(sectionNum, turnSectionNum);
         }
         ++currentStraight;
 
@@ -182,29 +184,29 @@ public class GenerateLevel : MonoBehaviour
         if (currentTileDirection == Vector3.forward)
         {
             q = Quaternion.Euler(0, 90, 0);
-            if (secNum == 3) q = Quaternion.Euler(0, 0, 0);
+            if (secNum == 4) q = Quaternion.Euler(0, 0, 0);
         }
         else if (currentTileDirection == Vector3.right)
         {
             q = Quaternion.Euler(0, 180, 0);
-            if (secNum == 3) q = Quaternion.Euler(0, 90, 0);
+            if (secNum == 4) q = Quaternion.Euler(0, 90, 0);
         }
         else if (currentTileDirection == Vector3.left)
         {
             q = Quaternion.Euler(0, 0, 0);
-            if (secNum == 3) q = Quaternion.Euler(0, 270, 0);
+            if (secNum == 4) q = Quaternion.Euler(0, 270, 0);
         }
         else
         {
             q = Quaternion.Euler(0, 270, 0);
-            if (secNum == 3) q = Quaternion.Euler(0, 180, 0);
+            if (secNum == 4) q = Quaternion.Euler(0, 180, 0);
         }
 
 
         generatedSections.Add(GameObject.Instantiate(section[secNum], currentTilePosition + currentTileDirection * 2.7f, q));
         currentTilePosition += currentTileDirection * 2.7f;
 
-        if (secNum == 3)
+        if (secNum == 4)
         {
             if (currentTileDirection == Vector3.forward)
             {
@@ -224,7 +226,7 @@ public class GenerateLevel : MonoBehaviour
             }
         }
 
-        if (secNum == 4)
+        if (secNum == 5)
         {
             if (currentTileDirection == Vector3.forward)
             {
