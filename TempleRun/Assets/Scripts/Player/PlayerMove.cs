@@ -80,7 +80,7 @@ public class PlayerMove : MonoBehaviour
                 dirX = 0;
                 dirZ = 1;
             }
-
+            Debug.Log("moveDir:" + moveDirection);
             if (moveDirection == Vector3.forward) moveDirection = Vector3.left;
             else if (moveDirection == Vector3.left) moveDirection = Vector3.back;
             else if (moveDirection == Vector3.back) moveDirection = Vector3.right;
@@ -96,18 +96,33 @@ public class PlayerMove : MonoBehaviour
             collisionTurnR = false;
             transform.Rotate(0.0f, 90.0f, 0.0f, Space.Self);
 
-            float dirX = 1;
+            float dirX = 0;
             float dirZ = 0;
-            if (moveDirection == Vector3.back || moveDirection == Vector3.forward)
+            Debug.Log("moveDir -> " + moveDirection);
+            if (moveDirection == Vector3.forward)
             {
+                moveDirection = Vector3.right;
                 dirX = 0;
                 dirZ = 1;
             }
-
-            if (moveDirection == Vector3.forward) moveDirection = Vector3.right;
-            else if (moveDirection == Vector3.left) moveDirection = Vector3.forward;
-            else if (moveDirection == Vector3.back) moveDirection = Vector3.left;
-            else moveDirection = Vector3.back;
+            else if (moveDirection == Vector3.left)
+            {
+                moveDirection = Vector3.forward;
+                dirX = -1;
+                dirZ = 0;
+            }
+            else if (moveDirection == Vector3.back)
+            {
+                moveDirection = Vector3.left;
+                dirX = 0;
+                dirZ = 1;
+            }
+            else
+            {
+                moveDirection = Vector3.back;
+                dirX = 1;
+                dirZ = 0;
+            }
 
             transform.position = transform.position + new Vector3(-(transform.position.x % 0.9f) + 0.9f * dirX, 0f, -(transform.position.z % 0.9f) + 0.9f * (dirZ));
 
@@ -189,12 +204,10 @@ public class PlayerMove : MonoBehaviour
         if (other.tag == "HitBoxLeft")
         {
             collisionTurnL = false;
-            Debug.Log("LEftExit");
         }
         if (other.tag == "HitBoxRight")
         {
             collisionTurnR = false;
-            Debug.Log("RightExit");
         }
     }
 
