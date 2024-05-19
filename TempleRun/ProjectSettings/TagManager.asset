@@ -8,6 +8,9 @@ TagManager:
   - HitBoxLeft
   - HitBoxRight
   - Paret
+  - JumpHitbox
+  - RollHitbox
+  - Moneda
   layers:
   - Default
   - TransparentFX

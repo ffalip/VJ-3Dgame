@@ -20,10 +20,13 @@ public class PlayerMove : MonoBehaviour
     private bool collisionTurnL = false;
     private int lane = 1;
     private float pos;
-    private float timeJ = 0f;
-    private float timeR = 0f;
+    private int numFramesJump = 0;
+    private int numFramesRoll = 0;
+    private int numFramesTrip = 0;
     private Vector3 turnPos;
     public GameObject camera;
+    public GameObject esq;
+    private bool isEntrebancat = false;
     private bool isDead = false;
     public GameObject LevelControl;
 
@@ -53,30 +56,16 @@ public class PlayerMove : MonoBehaviour
         {
             anim.SetTrigger("Jump");
             isJumping = true;
-            timeJ = Time.time;
             collisionJump.enabled = false;
         }
+
         if (Input.GetKeyDown("down") && !isJumping && !isRolling && !isDead)
         {
             anim.SetTrigger("Roll");
             isRolling = true;
-            timeR = Time.time;
             collisionRoll.enabled = false;
         }
 
-        if (Time.time - timeJ >= 0.5 && isJumping)
-        {
-            isJumping = false;
-            timeJ = 0f;
-            collisionJump.enabled = true;
-        }
-
-        if (Time.time - timeR >= 1.167 && isRolling)
-        {
-            isRolling = false;
-            timeR = 0f;
-            collisionRoll.enabled = true;
-        }
 
         //----------------TURN-LEFT---------------
         if (collisionTurnL && Input.GetKeyDown("left") && !isDead)
@@ -99,6 +88,7 @@ public class PlayerMove : MonoBehaviour
 
             transform.position = transform.position + new Vector3(-(transform.position.x % 0.9f) + 0.9f * dirX, 0f, -(transform.position.z % 0.9f) + 0.9f * dirZ);
             camera.GetComponent<CameraFollowPlayer>().modifyOffset(moveDirection);
+            esq.GetComponent<EsqController>().modifyMoveDirection(moveDirection, transform.rotation);
         }
         //----------------TURN-RIGHT---------------
         if (collisionTurnR && Input.GetKeyDown("right") && !isDead)
@@ -122,6 +112,7 @@ public class PlayerMove : MonoBehaviour
             transform.position = transform.position + new Vector3(-(transform.position.x % 0.9f) + 0.9f * dirX, 0f, -(transform.position.z % 0.9f) + 0.9f * (dirZ));
 
             camera.GetComponent<CameraFollowPlayer>().modifyOffset(moveDirection);
+            esq.GetComponent<EsqController>().modifyMoveDirection(moveDirection, transform.rotation);
         }
 
         if (Input.GetKeyDown(KeyCode.T))
@@ -149,6 +140,37 @@ public class PlayerMove : MonoBehaviour
         }
         else turnL = false;
 
+        if (isJumping && !isDead)
+        {
+            ++numFramesJump;
+            if (numFramesJump >= 50) 
+            { 
+                isJumping = false;
+                numFramesJump = 0;
+                collisionJump.enabled = true;
+            }
+        }
+        if (isRolling && !isDead)
+        {
+            ++numFramesRoll;
+            if (numFramesRoll >= 50)
+            {
+                isRolling = false;
+                numFramesRoll = 0;
+                collisionRoll.enabled = true;
+            }
+        }
+        if (isEntrebancat && !isDead)
+        {
+            ++numFramesTrip;
+            if (numFramesTrip >= 250)
+            {
+                isEntrebancat = false;
+                numFramesTrip = 0;
+                LevelControl.GetComponent<GenerateLevel>().changeIsTrip();
+                moveSpeed = 2.7f;
+            }
+        }
         transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed, Space.Self);
     }
 
@@ -184,4 +206,30 @@ public class PlayerMove : MonoBehaviour
         deadText.enabled = true;
         LevelControl.GetComponent<GenerateLevel>().setPlayerIsDead();
     }
+
+    public void trip()
+    {
+        if (isEntrebancat) die();
+        else
+        {
+            if (!isDead)
+            {
+                anim.SetTrigger("Trip");
+                isEntrebancat = true;
+                moveSpeed = 1.35f;
+                LevelControl.GetComponent<GenerateLevel>().changeIsTrip();
+            }
+        }
+    }
+
+    public bool getIsDead()
+    {
+        return isDead;
+    }
+
+    public bool getIsTrip()
+    {
+        return isEntrebancat;
+    }
+    
 }

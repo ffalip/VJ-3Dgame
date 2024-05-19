@@ -14,13 +14,15 @@ public class GenerateLevel : MonoBehaviour
     public bool creatingSection = false;
     public int secNum;
 
-    [SerializeField] private int minimumStraightSections = 5;
-    [SerializeField] private int maximumStraightSections = 15;
+    
+    //[SerializeField] private int minimumStraightSections = 5;
+    //[SerializeField] private int maximumStraightSections = 15;
     [SerializeField] private int currentStraight = 0;
 
     private Vector3 currentTileDirection = Vector3.forward;
     private Vector3 currentTilePosition = Vector3.zero;
-    private bool playerIsDead= false;
+    private bool playerIsDead = false;
+    private bool playerIsTrip = false;
     private GameObject prevSection;
 
     private void Start()
@@ -160,8 +162,10 @@ public class GenerateLevel : MonoBehaviour
                 currentTileDirection = Vector3.forward;
             }
         }
-
-        yield return new WaitForSeconds(1f);
+        
+        
+        if (!playerIsTrip) yield return new WaitForSeconds(1f);
+        else yield return new WaitForSeconds(2f);
         creatingSection = false;
     }
 
@@ -248,5 +252,9 @@ public class GenerateLevel : MonoBehaviour
     public void setPlayerIsDead()
     {
         playerIsDead = true;
+    }
+    public void changeIsTrip()
+    {
+        playerIsTrip = !playerIsTrip;
     }
 }

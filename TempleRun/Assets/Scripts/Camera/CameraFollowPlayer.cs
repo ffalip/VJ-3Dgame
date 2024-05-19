@@ -12,7 +12,6 @@ public class CameraFollowPlayer : MonoBehaviour
     public float smoothTime2;
     private Vector3 currentVelocity = Vector3.zero;
 
-    private float timeCount = 0.0f;
     private void Awake()
     {
         offset = transform.position - target.position;
@@ -23,8 +22,6 @@ public class CameraFollowPlayer : MonoBehaviour
         float t = Time.deltaTime * smoothTime2;
         Vector3 targetPosition = target.position + offset;
         transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, smoothTime1);
-        //transform.rotation = Quaternion.SlerpUnclamped(transform.rotation, direction, smoothTime1);
-        //transform.rotation = Quaternion.Euler(Vector3.SmoothDamp(transform.rotation.eulerAngles, direction.eulerAngles, ref currentVelocity, smoothTime2 * Time.deltaTime));
         transform.rotation = Quaternion.SlerpUnclamped(transform.rotation, direction, t);
 
     }
