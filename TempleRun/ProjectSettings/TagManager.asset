@@ -11,11 +11,12 @@ TagManager:
   - JumpHitbox
   - RollHitbox
   - Moneda
+  - ColliderTop
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Hidden
   - Water
   - UI
   - 

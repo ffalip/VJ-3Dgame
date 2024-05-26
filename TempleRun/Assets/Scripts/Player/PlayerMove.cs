@@ -225,7 +225,7 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    private void die()
+    public void die()
     {
         isDead = true;
         moveSpeed = 0.0f;
