@@ -11,6 +11,7 @@ public class PlayerMove : MonoBehaviour
     public Animator anim;
     public BoxCollider collisionJump;
     public BoxCollider collisionRoll;
+    private Vector3 centralPos;
     private Vector3 moveDirection = Vector3.forward;
     private bool isJumping = false;
     private bool isRolling = false;
@@ -73,34 +74,25 @@ public class PlayerMove : MonoBehaviour
             collisionTurnL = false;
             transform.Rotate(0.0f, -90.0f, 0.0f, Space.Self);
 
-            float dirX = 0;
-            float dirZ = 0;
             if (moveDirection == Vector3.forward)
             {
                 moveDirection = Vector3.left;
-                dirX = 0;
-                dirZ = 0;
             }
             else if (moveDirection == Vector3.left)
             {
                 moveDirection = Vector3.back;
-                dirX = 0;
-                dirZ = 0;
             }
             else if (moveDirection == Vector3.back)
             {
                 moveDirection = Vector3.right;
-                dirX = 0;
-                dirZ = 0;
             }
             else
             {
                 moveDirection = Vector3.forward;
-                dirX = 0;
-                dirZ = 0;
             }
-
-            transform.position = transform.position + new Vector3(-(transform.position.x % 0.9f) + 0.9f * dirX, 0f, -(transform.position.z % 0.9f) + 0.9f * dirZ);
+            float lane = 0;
+            transform.position = new Vector3(centralPos.x, transform.position.y, centralPos.z);
+            transform.position = transform.position + new Vector3(-(transform.position.x % 0.9f) + 0.9f * lane, 0f, -(transform.position.z % 0.9f) + 0.9f * lane);
             camera.GetComponent<CameraFollowPlayer>().modifyOffset(moveDirection);
             esq.GetComponent<EsqController>().modifyMoveDirection(moveDirection, transform.rotation);
         }
@@ -110,35 +102,26 @@ public class PlayerMove : MonoBehaviour
             collisionTurnR = false;
             transform.Rotate(0.0f, 90.0f, 0.0f, Space.Self);
             
-            float dirX = 0;
-            float dirZ = 0;
             Debug.Log("moveDir -> " + moveDirection);
             if (moveDirection == Vector3.forward)
             {
                 moveDirection = Vector3.right;
-                dirX = -1;
-                dirZ = 1;
             }
             else if (moveDirection == Vector3.left)
             {
                 moveDirection = Vector3.forward;
-                dirX = 0;
-                dirZ = 0;
             }
             else if (moveDirection == Vector3.back)
             {
                 moveDirection = Vector3.left;
-                dirX = 0;
-                dirZ = 1;
             }
             else
             {
                 moveDirection = Vector3.back;
-                dirX = 1;
-                dirZ = 0;
             }
-
-            transform.position = transform.position + new Vector3(-(transform.position.x % 0.9f) + 0.9f * dirX, 0f, -(transform.position.z % 0.9f) + 0.9f * (dirZ));
+            lane = 0;
+            transform.position = new Vector3(centralPos.x, transform.position.y, centralPos.z);
+            transform.position = transform.position + new Vector3(-(transform.position.x % 0.9f) + 0.9f * lane, 0f, -(transform.position.z % 0.9f) + 0.9f * (lane));
 
             camera.GetComponent<CameraFollowPlayer>().modifyOffset(moveDirection);
             esq.GetComponent<EsqController>().modifyMoveDirection(moveDirection, transform.rotation);
@@ -205,9 +188,15 @@ public class PlayerMove : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "HitBoxLeft") collisionTurnL = true;
+        if (other.tag == "HitBoxLeft") {
+            collisionTurnL = true;
+            centralPos = other.transform.position;
+        }
 
-        if (other.tag == "HitBoxRight") collisionTurnR = true;
+        if (other.tag == "HitBoxRight") {
+            collisionTurnR = true;
+            centralPos = other.transform.position;
+        }
 
         if (other.tag == "Paret") die();
 
