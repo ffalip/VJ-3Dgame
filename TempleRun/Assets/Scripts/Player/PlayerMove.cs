@@ -73,18 +73,32 @@ public class PlayerMove : MonoBehaviour
             collisionTurnL = false;
             transform.Rotate(0.0f, -90.0f, 0.0f, Space.Self);
 
-            float dirX = 1;
+            float dirX = 0;
             float dirZ = 0;
-            if (moveDirection == Vector3.back || moveDirection == Vector3.forward)
+            if (moveDirection == Vector3.forward)
             {
+                moveDirection = Vector3.left;
                 dirX = 0;
-                dirZ = 1;
+                dirZ = 0;
             }
-            Debug.Log("moveDir:" + moveDirection);
-            if (moveDirection == Vector3.forward) moveDirection = Vector3.left;
-            else if (moveDirection == Vector3.left) moveDirection = Vector3.back;
-            else if (moveDirection == Vector3.back) moveDirection = Vector3.right;
-            else moveDirection = Vector3.forward;
+            else if (moveDirection == Vector3.left)
+            {
+                moveDirection = Vector3.back;
+                dirX = 0;
+                dirZ = 0;
+            }
+            else if (moveDirection == Vector3.back)
+            {
+                moveDirection = Vector3.right;
+                dirX = 0;
+                dirZ = 0;
+            }
+            else
+            {
+                moveDirection = Vector3.forward;
+                dirX = 0;
+                dirZ = 0;
+            }
 
             transform.position = transform.position + new Vector3(-(transform.position.x % 0.9f) + 0.9f * dirX, 0f, -(transform.position.z % 0.9f) + 0.9f * dirZ);
             camera.GetComponent<CameraFollowPlayer>().modifyOffset(moveDirection);
@@ -95,20 +109,20 @@ public class PlayerMove : MonoBehaviour
         {
             collisionTurnR = false;
             transform.Rotate(0.0f, 90.0f, 0.0f, Space.Self);
-
+            
             float dirX = 0;
             float dirZ = 0;
             Debug.Log("moveDir -> " + moveDirection);
             if (moveDirection == Vector3.forward)
             {
                 moveDirection = Vector3.right;
-                dirX = 0;
+                dirX = -1;
                 dirZ = 1;
             }
             else if (moveDirection == Vector3.left)
             {
                 moveDirection = Vector3.forward;
-                dirX = -1;
+                dirX = 0;
                 dirZ = 0;
             }
             else if (moveDirection == Vector3.back)
