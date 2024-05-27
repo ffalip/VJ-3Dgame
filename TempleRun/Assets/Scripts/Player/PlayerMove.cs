@@ -155,7 +155,7 @@ public class PlayerMove : MonoBehaviour
         if (isJumping && !isDead)
         {
             ++numFramesJump;
-            if (numFramesJump >= 50) 
+            if (numFramesJump >= 40) 
             { 
                 isJumping = false;
                 numFramesJump = 0;
@@ -165,7 +165,7 @@ public class PlayerMove : MonoBehaviour
         if (isRolling && !isDead)
         {
             ++numFramesRoll;
-            if (numFramesRoll >= 50)
+            if (numFramesRoll >= 40)
             {
                 isRolling = false;
                 numFramesRoll = 0;

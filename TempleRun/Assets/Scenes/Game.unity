@@ -1542,7 +1542,7 @@ MonoBehaviour:
   direction: {x: 0, y: 0, z: 0, w: 0}
   target: {fileID: 1579984376}
   smoothTime1: 0.2
-  smoothTime2: 3
+  smoothTime2: 7
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
