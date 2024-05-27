@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ColLideJump : MonoBehaviour
+public class CollideRoll : MonoBehaviour
 {
     // Start is called before the first frame update
     PlayerMove pm;
@@ -14,6 +14,6 @@ public class ColLideJump : MonoBehaviour
     // Update is called once per frame
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Spike" && !pm.getIsDead()) pm.trip();
+        if (other.tag == "ColliderTop" && !pm.getIsDead()) pm.die();
     }
 }

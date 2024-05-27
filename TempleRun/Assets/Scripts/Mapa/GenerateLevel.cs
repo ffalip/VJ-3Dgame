@@ -103,29 +103,29 @@ public class GenerateLevel : MonoBehaviour
         if (currentTileDirection == Vector3.forward)
         {
             q = Quaternion.Euler(0, 90, 0);
-            if (secNum == 4) q = Quaternion.Euler(0, 0, 0);
+            if (secNum == sectionNum) q = Quaternion.Euler(0, 0, 0);
         }
         else if (currentTileDirection == Vector3.right)
         {
             q = Quaternion.Euler(0, 180, 0);
-            if (secNum == 4) q = Quaternion.Euler(0, 90, 0);
+            if (secNum == sectionNum) q = Quaternion.Euler(0, 90, 0);
         }
         else if (currentTileDirection == Vector3.left)
         {
             q = Quaternion.Euler(0, 0, 0);
-            if (secNum == 4) q = Quaternion.Euler(0, 270, 0);
+            if (secNum == sectionNum) q = Quaternion.Euler(0, 270, 0);
         }
         else
         {
             q = Quaternion.Euler(0, 270, 0);
-            if (secNum == 4) q = Quaternion.Euler(0, 180, 0);
+            if (secNum == sectionNum) q = Quaternion.Euler(0, 180, 0);
         }
 
         
         generatedSections.Add(GameObject.Instantiate(section[secNum], currentTilePosition + currentTileDirection * 2.7f, q));
         currentTilePosition += currentTileDirection * 2.7f;
 
-        if (secNum == 4)
+        if (secNum == sectionNum)
         {
             if (currentTileDirection == Vector3.forward)
             {
@@ -145,7 +145,7 @@ public class GenerateLevel : MonoBehaviour
             }
         }
 
-        if (secNum == 5)
+        if (secNum == sectionNum+1)
         {
             if (currentTileDirection == Vector3.forward)
             {
@@ -188,29 +188,29 @@ public class GenerateLevel : MonoBehaviour
         if (currentTileDirection == Vector3.forward)
         {
             q = Quaternion.Euler(0, 90, 0);
-            if (secNum == 4) q = Quaternion.Euler(0, 0, 0);
+            if (secNum == sectionNum) q = Quaternion.Euler(0, 0, 0);
         }
         else if (currentTileDirection == Vector3.right)
         {
             q = Quaternion.Euler(0, 180, 0);
-            if (secNum == 4) q = Quaternion.Euler(0, 90, 0);
+            if (secNum == sectionNum) q = Quaternion.Euler(0, 90, 0);
         }
         else if (currentTileDirection == Vector3.left)
         {
             q = Quaternion.Euler(0, 0, 0);
-            if (secNum == 4) q = Quaternion.Euler(0, 270, 0);
+            if (secNum == sectionNum) q = Quaternion.Euler(0, 270, 0);
         }
         else
         {
             q = Quaternion.Euler(0, 270, 0);
-            if (secNum == 4) q = Quaternion.Euler(0, 180, 0);
+            if (secNum == sectionNum) q = Quaternion.Euler(0, 180, 0);
         }
 
 
         generatedSections.Add(GameObject.Instantiate(section[secNum], currentTilePosition + currentTileDirection * 2.7f, q));
         currentTilePosition += currentTileDirection * 2.7f;
 
-        if (secNum == 4)
+        if (secNum == sectionNum)
         {
             if (currentTileDirection == Vector3.forward)
             {
@@ -230,7 +230,7 @@ public class GenerateLevel : MonoBehaviour
             }
         }
 
-        if (secNum == 5)
+        if (secNum == sectionNum+1)
         {
             if (currentTileDirection == Vector3.forward)
             {
