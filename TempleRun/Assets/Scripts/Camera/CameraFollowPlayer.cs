@@ -17,7 +17,7 @@ public class CameraFollowPlayer : MonoBehaviour
         offset = transform.position - target.position;
     }
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         float t = Time.deltaTime * smoothTime2;
         Vector3 targetPosition = target.position + offset;
