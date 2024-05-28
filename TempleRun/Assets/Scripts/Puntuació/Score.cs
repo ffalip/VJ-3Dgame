@@ -19,7 +19,7 @@ public class Score : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (!pm.getIsDead())
+        if (!pm.getIsDead() && !pm.getIsFall())
         {
             score += 1;
             scoreTextReal.text = score.ToString();

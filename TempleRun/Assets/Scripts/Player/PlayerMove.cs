@@ -11,6 +11,7 @@ public class PlayerMove : MonoBehaviour
     public Animator anim;
     public BoxCollider collisionJump;
     public BoxCollider collisionRoll;
+    public BoxCollider collisionFall;
     private Vector3 centralPos;
     private Vector3 moveDirection = Vector3.forward;
     private bool isJumping = false;
@@ -29,6 +30,7 @@ public class PlayerMove : MonoBehaviour
     public GameObject esq;
     private bool isEntrebancat = false;
     private bool isDead = false;
+    private bool isFall = false;
     public GameObject LevelControl;
 
     public TextMeshProUGUI deadText;
@@ -40,27 +42,28 @@ public class PlayerMove : MonoBehaviour
     void Update()
     {
         //----------------LEFT-RIGHT-MOVEMENT----------------
-        if (Input.GetKeyDown("right") && !turnR && !turnL && !collisionTurnR && !collisionTurnL &&!isDead)
+        if (Input.GetKeyDown("right") && !turnR && !turnL && !collisionTurnR && !collisionTurnL &&!isDead && !isFall)
         {
             turnR = true;
             pos = 0;
         }
 
-        if (Input.GetKeyDown("left") && !turnL && !turnR && !collisionTurnR && !collisionTurnL &&!isDead)
+        if (Input.GetKeyDown("left") && !turnL && !turnR && !collisionTurnR && !collisionTurnL &&!isDead && !isFall)
         {
             turnL = true;
             pos = 0;
         }
 
         //----------------JUMP-ROLL----------------
-        if (Input.GetKeyDown("up") && !isJumping && !isRolling && !isDead)
+        if (Input.GetKeyDown("up") && !isJumping && !isRolling && !isDead && !isFall)
         {
             anim.SetTrigger("Jump");
             isJumping = true;
             collisionJump.enabled = false;
+            collisionFall.enabled = false;
         }
 
-        if (Input.GetKeyDown("down") && !isJumping && !isRolling && !isDead)
+        if (Input.GetKeyDown("down") && !isJumping && !isRolling && !isDead && !isFall)
         {
             anim.SetTrigger("Roll");
             isRolling = true;
@@ -69,7 +72,7 @@ public class PlayerMove : MonoBehaviour
 
 
         //----------------TURN-LEFT---------------
-        if (collisionTurnL && Input.GetKeyDown("left") && !isDead)
+        if (collisionTurnL && Input.GetKeyDown("left") && !isDead && !isFall)
         {
             collisionTurnL = false;
             transform.Rotate(0.0f, -90.0f, 0.0f, Space.Self);
@@ -97,7 +100,7 @@ public class PlayerMove : MonoBehaviour
             esq.GetComponent<EsqController>().modifyMoveDirection(moveDirection, transform.rotation);
         }
         //----------------TURN-RIGHT---------------
-        if (collisionTurnR && Input.GetKeyDown("right") && !isDead)
+        if (collisionTurnR && Input.GetKeyDown("right") && !isDead && !isFall)
         {
             collisionTurnR = false;
             transform.Rotate(0.0f, 90.0f, 0.0f, Space.Self);
@@ -131,7 +134,7 @@ public class PlayerMove : MonoBehaviour
         {
             Time.timeScale = 0;
         }
-        if (isDead && Input.GetKeyDown(KeyCode.R))
+        if ((isDead || isFall) && Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene("Credits");
         }
@@ -152,7 +155,7 @@ public class PlayerMove : MonoBehaviour
         }
         else turnL = false;
 
-        if (isJumping && !isDead)
+        if (isJumping && !isDead && !isFall)
         {
             ++numFramesJump;
             if (numFramesJump >= 40) 
@@ -160,9 +163,10 @@ public class PlayerMove : MonoBehaviour
                 isJumping = false;
                 numFramesJump = 0;
                 collisionJump.enabled = true;
+                collisionFall.enabled = true;
             }
         }
-        if (isRolling && !isDead)
+        if (isRolling && !isDead && !isFall)
         {
             ++numFramesRoll;
             if (numFramesRoll >= 40)
@@ -172,7 +176,7 @@ public class PlayerMove : MonoBehaviour
                 collisionRoll.enabled = true;
             }
         }
-        if (isEntrebancat && !isDead)
+        if (isEntrebancat && !isDead && !isFall)
         {
             ++numFramesTrip;
             if (numFramesTrip >= 250)
@@ -223,6 +227,15 @@ public class PlayerMove : MonoBehaviour
         LevelControl.GetComponent<GenerateLevel>().setPlayerIsDead();
     }
 
+    public void fall()
+    {
+        isFall = true;
+        moveSpeed = 0.0f;
+        anim.SetTrigger("Fall");
+        deadText.enabled = true;
+        LevelControl.GetComponent<GenerateLevel>().setPlayerIsDead();
+    }
+
     public void trip()
     {
         if (isEntrebancat) die();
@@ -232,7 +245,7 @@ public class PlayerMove : MonoBehaviour
             {
                 anim.SetTrigger("Trip");
                 isEntrebancat = true;
-                moveSpeed = 1.35f;
+                moveSpeed = 1.8f;
                 LevelControl.GetComponent<GenerateLevel>().changeIsTrip();
             }
         }
@@ -241,6 +254,11 @@ public class PlayerMove : MonoBehaviour
     public bool getIsDead()
     {
         return isDead;
+    }
+
+    public bool getIsFall()
+    {
+        return isFall;
     }
 
     public bool getIsTrip()

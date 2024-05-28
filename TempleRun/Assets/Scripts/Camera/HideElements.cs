@@ -23,7 +23,15 @@ public class HideElements : MonoBehaviour
         foreach (RaycastHit hit in hits)
         {
             GameObject hitObject = hit.collider.gameObject;
-            hitObject.layer = LayerMask.NameToLayer(hiddenLayerName);
+            if (hitObject.tag == "EliminarCamera")
+            {
+                hitObject.layer = LayerMask.NameToLayer(hiddenLayerName);
+                GameObject[] sons = hitObject.GetComponentsInChildren<GameObject>();
+                foreach (GameObject son in sons)
+                {
+                    son.layer = LayerMask.NameToLayer(hiddenLayerName);
+                }
+            }
         }
     }
 }

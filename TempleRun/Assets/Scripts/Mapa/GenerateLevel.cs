@@ -167,7 +167,7 @@ public class GenerateLevel : MonoBehaviour
         
         
         if (!playerIsTrip) yield return new WaitForSeconds(1f);
-        else yield return new WaitForSeconds(2f);
+        else yield return new WaitForSeconds(1.666666666f);
         creatingSection = false;
     }
 

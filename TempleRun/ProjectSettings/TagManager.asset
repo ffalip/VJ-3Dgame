@@ -12,6 +12,8 @@ TagManager:
   - RollHitbox
   - Moneda
   - ColliderTop
+  - ColliderFall
+  - EliminarCamera
   layers:
   - Default
   - TransparentFX
