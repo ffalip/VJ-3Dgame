@@ -44,14 +44,18 @@ public class PlayerMove : MonoBehaviour
         //----------------LEFT-RIGHT-MOVEMENT----------------
         if (Input.GetKeyDown("right") && !turnR && !turnL && !collisionTurnR && !collisionTurnL &&!isDead && !isFall)
         {
-            turnR = true;
-            pos = 0;
+            if (lane < 2) {
+                turnR = true;
+                pos = 0;
+            }
         }
 
         if (Input.GetKeyDown("left") && !turnL && !turnR && !collisionTurnR && !collisionTurnL &&!isDead && !isFall)
         {
-            turnL = true;
-            pos = 0;
+            if (lane > 0) {
+                turnL = true;
+                pos = 0;
+            }
         }
 
         //----------------JUMP-ROLL----------------
@@ -203,6 +207,9 @@ public class PlayerMove : MonoBehaviour
         }
 
         if (other.tag == "Paret") die();
+        if (other.tag == "Right") lane = 2;
+        if (other.tag == "Center") lane = 1;
+        if (other.tag == "Left") lane = 0;
 
         turnPos = transform.position;
     }
