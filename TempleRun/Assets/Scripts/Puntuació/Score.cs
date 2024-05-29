@@ -44,4 +44,9 @@ public class Score : MonoBehaviour
         yield return new WaitForSeconds(0.1f); // espera 0.1 segundos
         isColliding = false;
     }
+
+    public int getScore()
+    {
+        return score;
+    }
 }

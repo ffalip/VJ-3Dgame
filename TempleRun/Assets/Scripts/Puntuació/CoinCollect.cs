@@ -42,5 +42,8 @@ public class CoinCollect : MonoBehaviour
         isColliding = false;
     }
 
-
+    public int getCoins()
+    {
+        return score;
+    }
 }

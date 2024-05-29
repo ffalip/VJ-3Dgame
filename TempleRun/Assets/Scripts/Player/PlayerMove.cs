@@ -32,7 +32,7 @@ public class PlayerMove : MonoBehaviour
     private bool isDead = false;
     private bool isFall = false;
     public GameObject LevelControl;
-
+    public GameManager gm;
     public TextMeshProUGUI deadText;
     private void Awake()
     {
@@ -140,7 +140,8 @@ public class PlayerMove : MonoBehaviour
         }
         if ((isDead || isFall) && Input.GetKeyDown(KeyCode.R))
         {
-            SceneManager.LoadScene("Credits");
+
+            gm.GameScene("Credits");
         }
     }
     private void FixedUpdate()
@@ -272,5 +273,8 @@ public class PlayerMove : MonoBehaviour
     {
         return isEntrebancat;
     }
-    
+    public Vector3 getDirection()
+    {
+        return moveDirection;
+    }
 }
