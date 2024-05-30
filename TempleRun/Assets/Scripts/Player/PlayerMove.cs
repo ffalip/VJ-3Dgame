@@ -229,6 +229,7 @@ public class PlayerMove : MonoBehaviour
                 running.pitch = 1;
             }
         }
+        
         transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed, Space.Self);
         water.GetComponent<Transform>().position = new Vector3( transform.position.x, transform.position.y -1, transform.position.z ) + moveDirection;
         coinEffect.GetComponent<Transform>().position = new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z);

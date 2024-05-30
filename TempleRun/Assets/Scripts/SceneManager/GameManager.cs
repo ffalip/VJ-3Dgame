@@ -13,6 +13,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI coins;
     // Start is called before the first frame update
 
+    public AudioSource audioSource;
+    public RawImage muteButton;
+    public Texture muteTexture;
+    public Texture unmuteTexture;
+
     public void GameScene(string sceneName)
     {
         if (sceneName == "Credits")
@@ -24,5 +29,20 @@ public class GameManager : MonoBehaviour
         }
         SceneManager.LoadScene(sceneName);
       
+    }
+
+    public void MuteGame()
+    {
+        if (audioSource.mute == false)
+        {
+            audioSource.mute = true;
+            muteButton.texture = muteTexture;
+        }
+        else {
+            audioSource.mute = false;
+            muteButton.texture = unmuteTexture;
+        }
+        
+        
     }
 }
