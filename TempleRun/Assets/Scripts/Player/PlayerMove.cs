@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -31,6 +32,7 @@ public class PlayerMove : MonoBehaviour
     private bool isEntrebancat = false;
     private bool isDead = false;
     private bool isFall = false;
+    private bool godMode = false;
     public GameObject LevelControl;
     public GameManager gm;
     public TextMeshProUGUI deadText;
@@ -41,6 +43,10 @@ public class PlayerMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.G)) {
+            godMode = !godMode;
+            if (godMode) Debug.Log("godmodeActivat");
+        }
         //----------------LEFT-RIGHT-MOVEMENT----------------
         if (Input.GetKeyDown("right") && !turnR && !turnL && !collisionTurnR && !collisionTurnL &&!isDead && !isFall)
         {
@@ -174,11 +180,11 @@ public class PlayerMove : MonoBehaviour
         if (isRolling && !isDead && !isFall)
         {
             ++numFramesRoll;
-            if (numFramesRoll >= 40)
+            if (numFramesRoll >= 30)
             {
                 isRolling = false;
                 numFramesRoll = 0;
-                collisionRoll.enabled = true;
+                if (numFramesRoll >= 50) collisionRoll.enabled = true;
             }
         }
         if (isEntrebancat && !isDead && !isFall)
@@ -211,6 +217,77 @@ public class PlayerMove : MonoBehaviour
         if (other.tag == "Right") lane = 2;
         if (other.tag == "Center") lane = 1;
         if (other.tag == "Left") lane = 0;
+        if (godMode && other.tag == "TriggerJump" && !isJumping && !isRolling && !isDead && !isFall)
+        {
+            anim.SetTrigger("Jump");
+            isJumping = true;
+            collisionJump.enabled = false;
+            collisionFall.enabled = false;
+        }
+        if (godMode && other.tag == "TriggerRoll" && !isJumping && !isRolling && !isDead && !isFall)
+        {
+            anim.SetTrigger("Roll");
+            isRolling = true;
+            collisionRoll.enabled = false;
+        }
+        if (godMode && other.tag == "TriggerTurnL" && !isJumping && !isRolling && !isDead && !isFall)
+        {
+            collisionTurnR = false;
+            transform.Rotate(0.0f, 90.0f, 0.0f, Space.Self);
+
+            Debug.Log("moveDir -> " + moveDirection);
+            if (moveDirection == Vector3.forward)
+            {
+                moveDirection = Vector3.right;
+            }
+            else if (moveDirection == Vector3.left)
+            {
+                moveDirection = Vector3.forward;
+            }
+            else if (moveDirection == Vector3.back)
+            {
+                moveDirection = Vector3.left;
+            }
+            else
+            {
+                moveDirection = Vector3.back;
+            }
+            lane = 0;
+            transform.position = new Vector3(centralPos.x, transform.position.y, centralPos.z);
+            transform.position = transform.position + new Vector3(-(transform.position.x % 0.9f) + 0.9f * lane, 0f, -(transform.position.z % 0.9f) + 0.9f * (lane));
+
+            camera.GetComponent<CameraFollowPlayer>().modifyOffset(moveDirection);
+            esq.GetComponent<EsqController>().modifyMoveDirection(moveDirection, transform.rotation);
+        }
+        if (godMode && other.tag == "TriggerTurnR" && !isJumping && !isRolling && !isDead && !isFall)
+        {
+            collisionTurnR = false;
+            transform.Rotate(0.0f, 90.0f, 0.0f, Space.Self);
+
+            Debug.Log("moveDir -> " + moveDirection);
+            if (moveDirection == Vector3.forward)
+            {
+                moveDirection = Vector3.right;
+            }
+            else if (moveDirection == Vector3.left)
+            {
+                moveDirection = Vector3.forward;
+            }
+            else if (moveDirection == Vector3.back)
+            {
+                moveDirection = Vector3.left;
+            }
+            else
+            {
+                moveDirection = Vector3.back;
+            }
+            lane = 0;
+            transform.position = new Vector3(centralPos.x, transform.position.y, centralPos.z);
+            transform.position = transform.position + new Vector3(-(transform.position.x % 0.9f) + 0.9f * lane, 0f, -(transform.position.z % 0.9f) + 0.9f * (lane));
+
+            camera.GetComponent<CameraFollowPlayer>().modifyOffset(moveDirection);
+            esq.GetComponent<EsqController>().modifyMoveDirection(moveDirection, transform.rotation);
+        }
 
         turnPos = transform.position;
     }

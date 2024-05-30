@@ -17,6 +17,11 @@ TagManager:
   - Right
   - Left
   - Center
+  - TriggerDreta
+  - TriggerEsquerra
+  - TriggerJump
+  - TriggerRoll
+  - TriggerTurnL
   layers:
   - Default
   - TransparentFX
