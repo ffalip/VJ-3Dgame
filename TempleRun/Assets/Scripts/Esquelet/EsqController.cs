@@ -15,6 +15,8 @@ public class EsqController : MonoBehaviour
     private Vector3 targetPos;
     private Vector3 currentVelocity = Vector3.zero;
     private int numFramesEat = 0;
+    public ParticleSystem blood;
+    public AudioSource bite;
 
     // Start is called before the first frame update
     void Start()
@@ -46,8 +48,11 @@ public class EsqController : MonoBehaviour
             {
                 esqAnim.SetTrigger("Eat");
                 numFramesEat = 0;
+                blood.Play();
+                if (!bite.isPlaying)bite.Play();
             }
         }
+        blood.GetComponent<Transform>().position = targetPos;
     }
 
     public void modifyMoveDirection(Vector3 md, Quaternion dir)
