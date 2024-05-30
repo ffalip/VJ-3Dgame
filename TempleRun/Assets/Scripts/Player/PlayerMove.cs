@@ -41,6 +41,7 @@ public class PlayerMove : MonoBehaviour
     public AudioSource running;
     public AudioSource skeletonSound;
     public AudioSource watterSound;
+    public AudioSource hitSound;
     private bool increase = true;
     public ParticleSystem water;
     public ParticleSystem coinEffect;
@@ -230,7 +231,7 @@ public class PlayerMove : MonoBehaviour
         }
         transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed, Space.Self);
         water.GetComponent<Transform>().position = new Vector3( transform.position.x, transform.position.y -1, transform.position.z ) + moveDirection;
-        coinEffect.GetComponent<Transform>().position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
+        coinEffect.GetComponent<Transform>().position = new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -245,7 +246,10 @@ public class PlayerMove : MonoBehaviour
             centralPos = other.transform.position;
         }
 
-        if (other.tag == "Paret") die();
+        if (other.tag == "Paret") {
+            hitSound.Play();
+            die();
+        }
         if (other.tag == "Right") lane = 2;
         if (other.tag == "Center") lane = 1;
         if (other.tag == "Left") lane = 0;
@@ -353,6 +357,7 @@ public class PlayerMove : MonoBehaviour
 
     public void die()
     {
+        
         isDead = true;
         moveSpeed = 0.0f;
         anim.SetTrigger("Crash");
