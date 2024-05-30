@@ -29,7 +29,7 @@ public class GenerateLevel : MonoBehaviour
     public int turnSectionNum;
     private void Start()
     {
-        for (int i = 0; i < 15; ++i) GenerateIni();
+        for (int i = 0; i < 15; ++i) GenerateIni(i);
     }
 
     // Update is called once per frame
@@ -171,11 +171,13 @@ public class GenerateLevel : MonoBehaviour
         creatingSection = false;
     }
 
-    void GenerateIni()
+    void GenerateIni(int i)
     {
         if (currentStraight < 5)
         {
-            secNum = UnityEngine.Random.Range(0, sectionNum);
+            if (i == 0) secNum = 0;
+            else if (i > 0 && i < 6) secNum =  UnityEngine.Random.Range(0, 5);
+            else secNum = UnityEngine.Random.Range(0, sectionNum);
         }
         else if (currentStraight >= 7)
         {
