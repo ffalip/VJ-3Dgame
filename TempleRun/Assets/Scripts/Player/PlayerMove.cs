@@ -36,9 +36,14 @@ public class PlayerMove : MonoBehaviour
     public GameObject LevelControl;
     public GameManager gm;
     public TextMeshProUGUI deadText;
+    public AudioSource running;
+    public AudioSource skeletonSound;
+    public AudioSource watterSound;
+    private bool increase = true;
     private void Awake()
     {
         deadText.enabled = false;
+        running.Play();
     }
     // Update is called once per frame
     void Update()
@@ -71,6 +76,7 @@ public class PlayerMove : MonoBehaviour
             isJumping = true;
             collisionJump.enabled = false;
             collisionFall.enabled = false;
+            running.Stop();
         }
 
         if (Input.GetKeyDown("down") && !isJumping && !isRolling && !isDead && !isFall)
@@ -78,6 +84,7 @@ public class PlayerMove : MonoBehaviour
             anim.SetTrigger("Roll");
             isRolling = true;
             collisionRoll.enabled = false;
+            running.Stop();
         }
 
 
@@ -146,12 +153,22 @@ public class PlayerMove : MonoBehaviour
         }
         if ((isDead || isFall) && Input.GetKeyDown(KeyCode.R))
         {
-
+            watterSound.Stop();
+            running.Stop();
+            skeletonSound.Stop();
             gm.GameScene("Credits");
         }
     }
     private void FixedUpdate()
     {
+        if (running.isPlaying && !isDead) {
+            if (running.panStereo <= -0.6f) increase = true;
+            else if (running.panStereo >= 0.6f) increase = false;
+
+            if (increase )running.panStereo += 0.002f;
+            else running.panStereo -= 0.002f;
+        } else running.Stop();
+
         if (turnR && pos <= 9)
         {
             transform.Translate(Vector3.Lerp(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.9f, 0.0f, 0.0f), 0.1f), Space.Self);
@@ -175,6 +192,7 @@ public class PlayerMove : MonoBehaviour
                 numFramesJump = 0;
                 collisionJump.enabled = true;
                 collisionFall.enabled = true;
+                running.Play();
             }
         }
         if (isRolling && !isDead && !isFall)
@@ -185,6 +203,7 @@ public class PlayerMove : MonoBehaviour
                 isRolling = false;
                 numFramesRoll = 0;
                 if (numFramesRoll >= 50) collisionRoll.enabled = true;
+                running.Play();
             }
         }
         if (isEntrebancat && !isDead && !isFall)
@@ -192,10 +211,12 @@ public class PlayerMove : MonoBehaviour
             ++numFramesTrip;
             if (numFramesTrip >= 250)
             {
+                skeletonSound.Stop();
                 isEntrebancat = false;
                 numFramesTrip = 0;
                 LevelControl.GetComponent<GenerateLevel>().changeIsTrip();
                 moveSpeed = 2.7f;
+                running.pitch = 1;
             }
         }
         transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed, Space.Self);
@@ -314,6 +335,8 @@ public class PlayerMove : MonoBehaviour
 
     public void fall()
     {
+        watterSound.Play();
+        running.Stop();
         isFall = true;
         moveSpeed = 0.0f;
         anim.SetTrigger("Fall");
@@ -328,6 +351,8 @@ public class PlayerMove : MonoBehaviour
         {
             if (!isDead)
             {
+                running.pitch = 0.92f;
+                skeletonSound.Play();
                 anim.SetTrigger("Trip");
                 isEntrebancat = true;
                 moveSpeed = 1.8f;
