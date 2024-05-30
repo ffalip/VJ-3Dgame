@@ -22,6 +22,8 @@ TagManager:
   - TriggerJump
   - TriggerRoll
   - TriggerTurnL
+  - TriggerTurnR
+  - Water
   layers:
   - Default
   - TransparentFX

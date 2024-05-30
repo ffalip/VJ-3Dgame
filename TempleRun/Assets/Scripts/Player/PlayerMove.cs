@@ -24,7 +24,9 @@ public class PlayerMove : MonoBehaviour
     private int lane = 1;
     private float pos;
     private int numFramesJump = 0;
+    private int numFramesJumpHitbox = 0;
     private int numFramesRoll = 0;
+    private int numFramesRollHitbox = 0;
     private int numFramesTrip = 0;
     private Vector3 turnPos;
     public GameObject camera;
@@ -36,9 +38,15 @@ public class PlayerMove : MonoBehaviour
     public GameObject LevelControl;
     public GameManager gm;
     public TextMeshProUGUI deadText;
+    public ParticleSystem water;
+    public ParticleSystem coinEffect;
     private void Awake()
     {
         deadText.enabled = false;
+    }
+    private void Start()
+    {
+        godMode = false;
     }
     // Update is called once per frame
     void Update()
@@ -180,11 +188,11 @@ public class PlayerMove : MonoBehaviour
         if (isRolling && !isDead && !isFall)
         {
             ++numFramesRoll;
-            if (numFramesRoll >= 30)
+            if (numFramesRoll >= 40)
             {
                 isRolling = false;
+                collisionRoll.enabled = true;
                 numFramesRoll = 0;
-                if (numFramesRoll >= 50) collisionRoll.enabled = true;
             }
         }
         if (isEntrebancat && !isDead && !isFall)
@@ -199,6 +207,8 @@ public class PlayerMove : MonoBehaviour
             }
         }
         transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed, Space.Self);
+        water.GetComponent<Transform>().position = new Vector3( transform.position.x, transform.position.y -1, transform.position.z ) + moveDirection;
+        coinEffect.GetComponent<Transform>().position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -230,7 +240,34 @@ public class PlayerMove : MonoBehaviour
             isRolling = true;
             collisionRoll.enabled = false;
         }
-        if (godMode && other.tag == "TriggerTurnL" && !isJumping && !isRolling && !isDead && !isFall)
+        if (collisionTurnL && godMode && other.tag == "TriggerTurnL" && !isJumping && !isRolling && !isDead && !isFall)
+        {
+            collisionTurnL = false;
+            transform.Rotate(0.0f, -90.0f, 0.0f, Space.Self);
+
+            if (moveDirection == Vector3.forward)
+            {
+                moveDirection = Vector3.left;
+            }
+            else if (moveDirection == Vector3.left)
+            {
+                moveDirection = Vector3.back;
+            }
+            else if (moveDirection == Vector3.back)
+            {
+                moveDirection = Vector3.right;
+            }
+            else
+            {
+                moveDirection = Vector3.forward;
+            }
+            float lane = 0;
+            transform.position = new Vector3(centralPos.x, transform.position.y, centralPos.z);
+            transform.position = transform.position + new Vector3(-(transform.position.x % 0.9f) + 0.9f * lane, 0f, -(transform.position.z % 0.9f) + 0.9f * lane);
+            camera.GetComponent<CameraFollowPlayer>().modifyOffset(moveDirection);
+            esq.GetComponent<EsqController>().modifyMoveDirection(moveDirection, transform.rotation);
+        }
+        if (collisionTurnR && godMode && other.tag == "TriggerTurnR" && !isJumping && !isRolling && !isDead && !isFall)
         {
             collisionTurnR = false;
             transform.Rotate(0.0f, 90.0f, 0.0f, Space.Self);
@@ -259,34 +296,23 @@ public class PlayerMove : MonoBehaviour
             camera.GetComponent<CameraFollowPlayer>().modifyOffset(moveDirection);
             esq.GetComponent<EsqController>().modifyMoveDirection(moveDirection, transform.rotation);
         }
-        if (godMode && other.tag == "TriggerTurnR" && !isJumping && !isRolling && !isDead && !isFall)
+
+        if (godMode && other.tag == "TriggerDreta" && !turnR && !turnL && !collisionTurnR && !collisionTurnL && !isDead && !isFall)
         {
-            collisionTurnR = false;
-            transform.Rotate(0.0f, 90.0f, 0.0f, Space.Self);
+            if (lane < 2)
+            {
+                turnR = true;
+                pos = 0;
+            }
+        }
 
-            Debug.Log("moveDir -> " + moveDirection);
-            if (moveDirection == Vector3.forward)
+        if (godMode && other.tag == "TriggerEsquerra" && !turnL && !turnR && !collisionTurnR && !collisionTurnL && !isDead && !isFall)
+        {
+            if (lane > 0)
             {
-                moveDirection = Vector3.right;
+                turnL = true;
+                pos = 0;
             }
-            else if (moveDirection == Vector3.left)
-            {
-                moveDirection = Vector3.forward;
-            }
-            else if (moveDirection == Vector3.back)
-            {
-                moveDirection = Vector3.left;
-            }
-            else
-            {
-                moveDirection = Vector3.back;
-            }
-            lane = 0;
-            transform.position = new Vector3(centralPos.x, transform.position.y, centralPos.z);
-            transform.position = transform.position + new Vector3(-(transform.position.x % 0.9f) + 0.9f * lane, 0f, -(transform.position.z % 0.9f) + 0.9f * (lane));
-
-            camera.GetComponent<CameraFollowPlayer>().modifyOffset(moveDirection);
-            esq.GetComponent<EsqController>().modifyMoveDirection(moveDirection, transform.rotation);
         }
 
         turnPos = transform.position;
@@ -319,6 +345,7 @@ public class PlayerMove : MonoBehaviour
         anim.SetTrigger("Fall");
         deadText.enabled = true;
         LevelControl.GetComponent<GenerateLevel>().setPlayerIsDead();
+        water.Play();
     }
 
     public void trip()

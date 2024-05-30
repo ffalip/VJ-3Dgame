@@ -12,7 +12,7 @@ public class CoinCollect : MonoBehaviour
     private bool isColliding;
 
     public AudioSource collectSound;
-
+    public ParticleSystem coinEffect;
     private void Awake()
     {
         score = 0;
@@ -27,6 +27,7 @@ public class CoinCollect : MonoBehaviour
             if (!isColliding)
             {
                 collectSound.Play();
+                coinEffect.Play();
                 //collectSound.pitch += 0.02f;
                 isColliding = true;
                 ++score;

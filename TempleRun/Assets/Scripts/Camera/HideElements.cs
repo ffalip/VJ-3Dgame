@@ -17,7 +17,7 @@ public class HideElements : MonoBehaviour
     void HideObjectsBetweenCameraAndTarget()
     {
         // Calculate the direction and distance between the camera and the target
-        Vector3 direction = new Vector3(target.position.x, target.position.y + 1, target.position.z) - transform.position;
+        Vector3 direction = new Vector3(target.position.x, target.position.y, target.position.z) - new Vector3 (transform.position.x, transform.position.y, transform.position.z);
         float distance = direction.magnitude;
 
         // Perform a raycast to detect all objects in the path
