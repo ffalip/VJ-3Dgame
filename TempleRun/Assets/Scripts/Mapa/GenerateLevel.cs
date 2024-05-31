@@ -88,13 +88,18 @@ public class GenerateLevel : MonoBehaviour
 
     IEnumerator GenerateSection()
     {
-        if (currentStraight < 5)
+        if (currentStraight < 7)
         {
             secNum = UnityEngine.Random.Range(0, sectionNum);
         }
-        else if (currentStraight >= 7)
+        else if (currentStraight >= 7 && currentStraight < 11)
         {
-            currentStraight = 0;    
+            secNum = UnityEngine.Random.Range(0, turnSectionNum);
+            if (secNum == sectionNum || sectionNum == turnSectionNum - 1) currentStraight = 0;
+        }
+        else if (currentStraight >= 11)
+        {
+            currentStraight = 0;
             secNum = UnityEngine.Random.Range(sectionNum, turnSectionNum);
         }
         ++currentStraight;
@@ -173,19 +178,24 @@ public class GenerateLevel : MonoBehaviour
 
     void GenerateIni(int i)
     {
-        if (currentStraight < 5)
+        if (currentStraight < 7)
         {
             if (i == 0) secNum = 0;
             else if (i > 0 && i < 6) secNum =  UnityEngine.Random.Range(0, 5);
             else secNum = UnityEngine.Random.Range(0, sectionNum);
+            
         }
-        else if (currentStraight >= 7)
+        else if (currentStraight >= 7  && currentStraight < 11)
+        {
+            secNum = UnityEngine.Random.Range(0, turnSectionNum);
+            if (secNum == sectionNum || sectionNum == turnSectionNum-1) currentStraight = 0;
+        }
+        else if (currentStraight >= 11)
         {
             currentStraight = 0;
             secNum = UnityEngine.Random.Range(sectionNum, turnSectionNum);
         }
         ++currentStraight;
-
         Quaternion q;
         if (currentTileDirection == Vector3.forward)
         {
