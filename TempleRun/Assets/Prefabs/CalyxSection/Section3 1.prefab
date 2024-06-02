@@ -107,8 +107,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddfdc14252d04facb478b0ac88a127d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minIntensity: 0.4
-  maxIntensity: 1
+  min: 0.7
+  max: 1.1
 --- !u!1 &321639698968785500
 GameObject:
   m_ObjectHideFlags: 0
@@ -7490,6 +7490,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3585523159151803460}
   - component: {fileID: 872174248915159359}
+  - component: {fileID: 2857542449165525841}
   m_Layer: 0
   m_Name: TriggerEliminarTile (1)
   m_TagString: TriggerEliminarTile
@@ -7533,6 +7534,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.2, y: 1, z: 3}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2857542449165525841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7021910391214808888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9757a3628f66d7f429245feac3163318, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7215770397255630458
 GameObject:
   m_ObjectHideFlags: 0

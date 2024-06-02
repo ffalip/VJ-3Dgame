@@ -30,7 +30,6 @@ public class PlayerMove : MonoBehaviour
     private int numFramesRoll = 0;
     private int numFramesRollHitbox = 0;
     private int numFramesTrip = 0;
-    private Vector3 turnPos;
     public GameObject camera;
     public GameObject esq;
     private bool isEntrebancat = false;
@@ -48,6 +47,7 @@ public class PlayerMove : MonoBehaviour
     public ParticleSystem water;
     public ParticleSystem coinEffect;
     private int count = 0;
+
     private void Awake()
     {
         deadText.enabled = false;
@@ -55,6 +55,7 @@ public class PlayerMove : MonoBehaviour
     }
     private void Start()
     {
+        count = 0;
         godMode = false;
     }
     // Update is called once per frame
@@ -161,11 +162,6 @@ public class PlayerMove : MonoBehaviour
 
             camera.GetComponent<CameraFollowPlayer>().modifyOffset(moveDirection);
             esq.GetComponent<EsqController>().modifyMoveDirection(moveDirection, transform.rotation);
-        }
-
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            Time.timeScale = 10;
         }
 
         if ((isDead || isFall) && Input.GetKeyDown(KeyCode.R))
@@ -392,12 +388,6 @@ public class PlayerMove : MonoBehaviour
                 pos = 0;
             }
         }
-        
-        turnPos = transform.position;
-        if (other.tag == "TriggerEliminarTile")
-        {
-            LevelControl.GetComponent<GenerateLevel>().destroyLastTile();
-        }
     }
     private void OnTriggerExit(Collider other)
     {
@@ -408,10 +398,6 @@ public class PlayerMove : MonoBehaviour
         if (other.tag == "HitBoxRight")
         {
             collisionTurnR = false;
-        }
-        if (other.tag == "HitbossRightLane0" || other.tag == "HitboxRightLane1" || other.tag == "HitboxRightLane2")
-        {
-           //canTurn = false;
         }
     }
 

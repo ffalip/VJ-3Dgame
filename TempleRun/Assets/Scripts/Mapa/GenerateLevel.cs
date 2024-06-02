@@ -14,9 +14,6 @@ public class GenerateLevel : MonoBehaviour
     public bool creatingSection = false;
     public int secNum;
 
-    
-    //[SerializeField] private int minimumStraightSections = 5;
-    //[SerializeField] private int maximumStraightSections = 15;
     [SerializeField] private int currentStraight = 0;
 
     private Vector3 currentTileDirection = Vector3.forward;
@@ -37,8 +34,8 @@ public class GenerateLevel : MonoBehaviour
     {
         if (creatingSection == false  && !playerIsDead)
         {
-            creatingSection = true;
-            StartCoroutine(GenerateSection());
+            //creatingSection = true;
+            //StartCoroutine(GenerateSection());
             /*
             if (generatedSections.Count >= 20)
             {
@@ -48,47 +45,9 @@ public class GenerateLevel : MonoBehaviour
             }
             */
         }
-        if (Input.GetKeyDown("a"))
-        {
-            if (currentTileDirection == Vector3.forward)
-            {
-                currentTileDirection = Vector3.left;
-            }
-            else if (currentTileDirection == Vector3.left)
-            {
-                currentTileDirection = Vector3.back;
-            }
-            else if (currentTileDirection == Vector3.back)
-            {
-                currentTileDirection = Vector3.right;
-            }
-            else
-            {
-                currentTileDirection = Vector3.forward;
-            }
-        }
-        else if (Input.GetKeyDown("d"))
-        {
-            if (currentTileDirection == Vector3.forward)
-            {
-                currentTileDirection = Vector3.right;
-            }
-            else if (currentTileDirection == Vector3.left)
-            {
-                currentTileDirection = Vector3.forward;
-            }
-            else if (currentTileDirection == Vector3.back)
-            {
-                currentTileDirection = Vector3.left;
-            }
-            else
-            {
-                currentTileDirection = Vector3.back;
-            }
-        }
     }
 
-    IEnumerator GenerateSection()
+    public void GenerateSection()
     {
         if (currentStraight < 7)
         {
@@ -171,10 +130,7 @@ public class GenerateLevel : MonoBehaviour
                 currentTileDirection = Vector3.forward;
             }
         }
-        
-        
-        if (!playerIsTrip) yield return new WaitForSeconds(0.7f);
-        else yield return new WaitForSeconds(1.4f);
+    
         creatingSection = false;
     }
 
@@ -190,7 +146,7 @@ public class GenerateLevel : MonoBehaviour
         else if (currentStraight >= 7  && currentStraight < 11)
         {
             secNum = UnityEngine.Random.Range(0, turnSectionNum);
-            if (secNum == sectionNum || sectionNum == turnSectionNum-1) currentStraight = 0;
+            if (secNum == sectionNum || secNum == turnSectionNum-1) currentStraight = 0;
         }
         else if (currentStraight >= 11)
         {
@@ -275,11 +231,7 @@ public class GenerateLevel : MonoBehaviour
     }
     public void destroyLastTile()
     {
-        if (generatedSections.Count >= 20)
-        {
-
-            Destroy(generatedSections[0]);
-            generatedSections.Remove(generatedSections[0]);
-        }
+        Destroy(generatedSections[0]);
+        generatedSections.Remove(generatedSections[0]);
     }
 }
