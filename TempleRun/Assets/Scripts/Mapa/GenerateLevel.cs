@@ -39,12 +39,14 @@ public class GenerateLevel : MonoBehaviour
         {
             creatingSection = true;
             StartCoroutine(GenerateSection());
+            /*
             if (generatedSections.Count >= 20)
             {
                 
                 Destroy(generatedSections[0]);
                 generatedSections.Remove(generatedSections[0]);
             }
+            */
         }
         if (Input.GetKeyDown("a"))
         {
@@ -95,7 +97,7 @@ public class GenerateLevel : MonoBehaviour
         else if (currentStraight >= 7 && currentStraight < 15)
         {
             secNum = UnityEngine.Random.Range(0, turnSectionNum);
-            if (secNum == sectionNum || sectionNum == turnSectionNum - 1) currentStraight = 0;
+            if (secNum == sectionNum || secNum == turnSectionNum - 1) currentStraight = 0;
         }
         else if (currentStraight >= 15)
         {
@@ -171,8 +173,8 @@ public class GenerateLevel : MonoBehaviour
         }
         
         
-        if (!playerIsTrip) yield return new WaitForSeconds(0.96f);
-        else yield return new WaitForSeconds(1.666666666f);
+        if (!playerIsTrip) yield return new WaitForSeconds(0.7f);
+        else yield return new WaitForSeconds(1.4f);
         creatingSection = false;
     }
 
@@ -270,5 +272,14 @@ public class GenerateLevel : MonoBehaviour
     public void changeIsTrip()
     {
         playerIsTrip = !playerIsTrip;
+    }
+    public void destroyLastTile()
+    {
+        if (generatedSections.Count >= 20)
+        {
+
+            Destroy(generatedSections[0]);
+            generatedSections.Remove(generatedSections[0]);
+        }
     }
 }

@@ -165,7 +165,7 @@ public class PlayerMove : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.T))
         {
-            Time.timeScale = 0;
+            Time.timeScale = 10;
         }
 
         if ((isDead || isFall) && Input.GetKeyDown(KeyCode.R))
@@ -392,8 +392,12 @@ public class PlayerMove : MonoBehaviour
                 pos = 0;
             }
         }
-
+        
         turnPos = transform.position;
+        if (other.tag == "TriggerEliminarTile")
+        {
+            LevelControl.GetComponent<GenerateLevel>().destroyLastTile();
+        }
     }
     private void OnTriggerExit(Collider other)
     {

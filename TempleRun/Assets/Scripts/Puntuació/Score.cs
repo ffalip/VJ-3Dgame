@@ -33,7 +33,7 @@ public class Score : MonoBehaviour
             if (!isColliding)
             {
                 isColliding = true;
-                score+=100;
+                score+=200;
                 StartCoroutine(ResetCollisionFlag());
             }
         }
