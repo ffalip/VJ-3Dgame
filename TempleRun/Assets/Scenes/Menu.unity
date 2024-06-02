@@ -1316,7 +1316,7 @@ GameObject:
   - component: {fileID: 1506187361}
   - component: {fileID: 1506187360}
   m_Layer: 5
-  m_Name: PlayButton (1)
+  m_Name: ExitButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1388,7 +1388,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1227500778}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: MuteGame
+        m_MethodName: ExitGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

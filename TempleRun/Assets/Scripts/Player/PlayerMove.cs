@@ -21,6 +21,8 @@ public class PlayerMove : MonoBehaviour
     private bool turnR = false;
     private bool collisionTurnR = false;
     private bool collisionTurnL = false;
+    private bool canTurn = false;
+    private bool alreadyTurned = false;
     private int lane = 1;
     private float pos;
     private int numFramesJump = 0;
@@ -45,6 +47,7 @@ public class PlayerMove : MonoBehaviour
     private bool increase = true;
     public ParticleSystem water;
     public ParticleSystem coinEffect;
+    private int count = 0;
     private void Awake()
     {
         deadText.enabled = false;
@@ -98,9 +101,11 @@ public class PlayerMove : MonoBehaviour
 
 
         //----------------TURN-LEFT---------------
-        if (collisionTurnL && Input.GetKeyDown("left") && !isDead && !isFall)
+        if (collisionTurnL && Input.GetKeyDown("left") && !isDead && !isFall && canTurn && !alreadyTurned)
         {
             collisionTurnL = false;
+            canTurn = false;
+            alreadyTurned = true;
             transform.Rotate(0.0f, -90.0f, 0.0f, Space.Self);
 
             if (moveDirection == Vector3.forward)
@@ -121,14 +126,16 @@ public class PlayerMove : MonoBehaviour
             }
             float lane = 0;
             transform.position = new Vector3(centralPos.x, transform.position.y, centralPos.z);
-            transform.position = transform.position + new Vector3(-(transform.position.x % 0.9f) + 0.9f * lane, 0f, -(transform.position.z % 0.9f) + 0.9f * lane);
+            //transform.position = transform.position + new Vector3(-(transform.position.x % 0.9f) + 0.9f * lane, 0f, -(transform.position.z % 0.9f) + 0.9f * lane);
             camera.GetComponent<CameraFollowPlayer>().modifyOffset(moveDirection);
             esq.GetComponent<EsqController>().modifyMoveDirection(moveDirection, transform.rotation);
         }
         //----------------TURN-RIGHT---------------
-        if (collisionTurnR && Input.GetKeyDown("right") && !isDead && !isFall)
+        if (collisionTurnR && Input.GetKeyDown("right") && !isDead && !isFall && canTurn && !alreadyTurned)
         {
             collisionTurnR = false;
+            canTurn = false;
+            alreadyTurned = true;
             transform.Rotate(0.0f, 90.0f, 0.0f, Space.Self);
             
             Debug.Log("moveDir -> " + moveDirection);
@@ -150,7 +157,7 @@ public class PlayerMove : MonoBehaviour
             }
             lane = 0;
             transform.position = new Vector3(centralPos.x, transform.position.y, centralPos.z);
-            transform.position = transform.position + new Vector3(-(transform.position.x % 0.9f) + 0.9f * lane, 0f, -(transform.position.z % 0.9f) + 0.9f * (lane));
+            //transform.position = transform.position + new Vector3(-(transform.position.x % 0.9f) + 0.9f * lane, 0f, -(transform.position.z % 0.9f) + 0.9f * (lane));
 
             camera.GetComponent<CameraFollowPlayer>().modifyOffset(moveDirection);
             esq.GetComponent<EsqController>().modifyMoveDirection(moveDirection, transform.rotation);
@@ -160,12 +167,14 @@ public class PlayerMove : MonoBehaviour
         {
             Time.timeScale = 0;
         }
+
         if ((isDead || isFall) && Input.GetKeyDown(KeyCode.R))
         {
             watterSound.Stop();
             running.Stop();
             skeletonSound.Stop();
             gm.GameScene("Credits");
+            Time.timeScale = 1;
         }
     }
     private void FixedUpdate()
@@ -229,7 +238,13 @@ public class PlayerMove : MonoBehaviour
                 running.pitch = 1;
             }
         }
-        
+        if (alreadyTurned && count >= 100) {
+            alreadyTurned = false;
+            count = 0;
+        }
+        else if (alreadyTurned) count += 1; 
+
+        if (Time.timeScale < 2f) Time.timeScale += 0.00005f;
         transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed, Space.Self);
         water.GetComponent<Transform>().position = new Vector3( transform.position.x, transform.position.y -1, transform.position.z ) + moveDirection;
         coinEffect.GetComponent<Transform>().position = new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z);
@@ -239,12 +254,42 @@ public class PlayerMove : MonoBehaviour
     {
         if (other.tag == "HitBoxLeft") {
             collisionTurnL = true;
+        }
+        if (other.tag == "HitboxLeftLane0")
+        {
+            canTurn = true;
             centralPos = other.transform.position;
+            lane = 0;
+        } else if (other.tag == "HitboxLeftLane1")
+        {
+            canTurn = true;
+            centralPos = other.transform.position;
+            lane = 1;
+        } else if (other.tag == "HitboxLeftLane2")
+        {
+            canTurn = true;
+            centralPos = other.transform.position;
+            lane = 2;
         }
 
         if (other.tag == "HitBoxRight") {
             collisionTurnR = true;
+        }
+        if (other.tag == "HitboxRightLane0")
+        {
+            canTurn = true;
             centralPos = other.transform.position;
+            lane = 0;
+        } else if (other.tag == "HitboxRightLane1")
+        {
+            canTurn = true;
+            centralPos = other.transform.position;
+            lane = 1;
+        } else if (other.tag == "HitboxRightLane2")
+        {
+            canTurn = true;
+            centralPos = other.transform.position;
+            lane = 2;
         }
 
         if (other.tag == "Paret") {
@@ -254,6 +299,7 @@ public class PlayerMove : MonoBehaviour
         if (other.tag == "Right") lane = 2;
         if (other.tag == "Center") lane = 1;
         if (other.tag == "Left") lane = 0;
+
         if (godMode && other.tag == "TriggerJump" && !isJumping && !isRolling && !isDead && !isFall)
         {
             anim.SetTrigger("Jump");
@@ -261,15 +307,18 @@ public class PlayerMove : MonoBehaviour
             collisionJump.enabled = false;
             collisionFall.enabled = false;
         }
+
         if (godMode && other.tag == "TriggerRoll" && !isJumping && !isRolling && !isDead && !isFall)
         {
             anim.SetTrigger("Roll");
             isRolling = true;
             collisionRoll.enabled = false;
         }
-        if (collisionTurnL && godMode && other.tag == "TriggerTurnL" && !isJumping && !isRolling && !isDead && !isFall)
+
+        if (collisionTurnL && godMode && other.tag == "TriggerTurnL" && !isJumping && !isRolling && !isDead && !isFall && canTurn)
         {
             collisionTurnL = false;
+            canTurn = false;
             transform.Rotate(0.0f, -90.0f, 0.0f, Space.Self);
 
             if (moveDirection == Vector3.forward)
@@ -290,13 +339,15 @@ public class PlayerMove : MonoBehaviour
             }
             float lane = 0;
             transform.position = new Vector3(centralPos.x, transform.position.y, centralPos.z);
-            transform.position = transform.position + new Vector3(-(transform.position.x % 0.9f) + 0.9f * lane, 0f, -(transform.position.z % 0.9f) + 0.9f * lane);
+            //transform.position = transform.position + new Vector3(-(transform.position.x % 0.9f) + 0.9f * lane, 0f, -(transform.position.z % 0.9f) + 0.9f * lane);
             camera.GetComponent<CameraFollowPlayer>().modifyOffset(moveDirection);
             esq.GetComponent<EsqController>().modifyMoveDirection(moveDirection, transform.rotation);
         }
-        if (collisionTurnR && godMode && other.tag == "TriggerTurnR" && !isJumping && !isRolling && !isDead && !isFall)
+    
+        if (collisionTurnR && godMode && other.tag == "TriggerTurnR" && !isJumping && !isRolling && !isDead && !isFall && canTurn)
         {
             collisionTurnR = false;
+            canTurn = false;
             transform.Rotate(0.0f, 90.0f, 0.0f, Space.Self);
 
             Debug.Log("moveDir -> " + moveDirection);
@@ -318,7 +369,7 @@ public class PlayerMove : MonoBehaviour
             }
             lane = 0;
             transform.position = new Vector3(centralPos.x, transform.position.y, centralPos.z);
-            transform.position = transform.position + new Vector3(-(transform.position.x % 0.9f) + 0.9f * lane, 0f, -(transform.position.z % 0.9f) + 0.9f * (lane));
+            //transform.position = transform.position + new Vector3(-(transform.position.x % 0.9f) + 0.9f * lane, 0f, -(transform.position.z % 0.9f) + 0.9f * (lane));
 
             camera.GetComponent<CameraFollowPlayer>().modifyOffset(moveDirection);
             esq.GetComponent<EsqController>().modifyMoveDirection(moveDirection, transform.rotation);
@@ -353,6 +404,10 @@ public class PlayerMove : MonoBehaviour
         if (other.tag == "HitBoxRight")
         {
             collisionTurnR = false;
+        }
+        if (other.tag == "HitbossRightLane0" || other.tag == "HitboxRightLane1" || other.tag == "HitboxRightLane2")
+        {
+           //canTurn = false;
         }
     }
 

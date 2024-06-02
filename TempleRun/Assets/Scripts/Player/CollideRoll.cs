@@ -14,6 +14,10 @@ public class CollideRoll : MonoBehaviour
     // Update is called once per frame
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "ColliderTop" && !pm.getIsDead()) pm.die();
+        
+        if (other.tag == "ColliderTop" && !pm.getIsDead()) {
+            pm.hitSound.Play();
+            pm.die();
+        }
     }
 }

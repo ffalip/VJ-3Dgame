@@ -92,12 +92,12 @@ public class GenerateLevel : MonoBehaviour
         {
             secNum = UnityEngine.Random.Range(0, sectionNum);
         }
-        else if (currentStraight >= 7 && currentStraight < 11)
+        else if (currentStraight >= 7 && currentStraight < 15)
         {
             secNum = UnityEngine.Random.Range(0, turnSectionNum);
             if (secNum == sectionNum || sectionNum == turnSectionNum - 1) currentStraight = 0;
         }
-        else if (currentStraight >= 11)
+        else if (currentStraight >= 15)
         {
             currentStraight = 0;
             secNum = UnityEngine.Random.Range(sectionNum, turnSectionNum);
@@ -171,7 +171,7 @@ public class GenerateLevel : MonoBehaviour
         }
         
         
-        if (!playerIsTrip) yield return new WaitForSeconds(1f);
+        if (!playerIsTrip) yield return new WaitForSeconds(0.96f);
         else yield return new WaitForSeconds(1.666666666f);
         creatingSection = false;
     }

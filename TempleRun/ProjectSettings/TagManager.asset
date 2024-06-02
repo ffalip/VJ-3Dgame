@@ -24,6 +24,12 @@ TagManager:
   - TriggerTurnL
   - TriggerTurnR
   - Water
+  - HitboxRightLane0
+  - HitboxRightLane1
+  - HitboxRightLane2
+  - HitboxLeftLane0
+  - HitboxLeftLane1
+  - HitboxLeftLane2
   layers:
   - Default
   - TransparentFX
